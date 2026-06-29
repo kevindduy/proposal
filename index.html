@@ -1,0 +1,636 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Proposal: Perimeter Safety and Traffic Mitigation Barrier</title>
+    <style>
+        /* --- HIGH-LEVEL CSS VARIABLES --- */
+        :root {
+            --primary-bg: #f8fafc;
+            --sidebar-bg: #334155; 
+            --sidebar-hover: #475569;
+            --text-light: #f8fafc;
+            --text-dark: #1e293b;
+            --text-muted: #64748b;
+            --card-bg: #ffffff;
+            --border-color: #e2e8f0;
+            --sidebar-width: 280px;
+            --transition-speed: 0.3s;
+
+            /* STRATEGIC COLOR CODING */
+            --info-blue: #2563eb;     /* For general information & links */
+            --hazard-red: #dc2626;    /* For violations, warnings, critical CTA */
+            --math-green: #059669;    /* For calculations & physics */
+            --math-bg: #ecfdf5;       /* Light green background for math */
+            --hazard-bg: #fef2f2;     /* Light red background for warnings */
+        }
+
+        /* --- GLOBAL STYLES --- */
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+        }
+
+        body {
+            background-color: var(--primary-bg);
+            color: var(--text-dark);
+            display: flex;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        /* --- TYPOGRAPHY --- */
+        h1 { font-size: 2.5rem; line-height: 1.2; margin-bottom: 0.5rem; color: var(--text-dark); }
+        h2 { font-size: 1.75rem; margin-bottom: 1rem; color: var(--sidebar-bg); border-bottom: 2px solid var(--info-blue); padding-bottom: 0.25rem; display: inline-block; }
+        h3 { font-size: 1.25rem; margin: 1.5rem 0 0.5rem 0; color: var(--text-dark); }
+        p { line-height: 1.6; margin-bottom: 1rem; color: var(--text-muted); }
+        strong { color: var(--text-dark); }
+        a { color: var(--info-blue); text-decoration: none; }
+        a:hover { text-underline-offset: 3px; text-decoration: underline; }
+
+        /* --- SIDEBAR --- */
+        .sidebar {
+            width: var(--sidebar-width);
+            background-color: var(--sidebar-bg);
+            color: var(--text-light);
+            height: 100vh;
+            transition: transform var(--transition-speed) ease;
+            display: flex;
+            flex-direction: column;
+            flex-shrink: 0;
+            position: relative;
+            z-index: 100;
+        }
+
+        .sidebar.collapsed {
+            transform: translateX(-100%);
+            position: absolute;
+        }
+
+        .sidebar-header {
+            padding: 2rem 1.5rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .sidebar-header h2 {
+            font-size: 1.2rem;
+            color: var(--text-light);
+            border: none;
+            margin: 0;
+        }
+
+        .sidebar-nav {
+            list-style: none;
+            padding: 1rem 0;
+            flex-grow: 1;
+        }
+
+        .sidebar-nav li a {
+            display: block;
+            padding: 0.75rem 1.5rem;
+            color: var(--text-light);
+            text-decoration: none;
+            transition: background var(--transition-speed);
+            border-left: 4px solid transparent;
+        }
+
+        .sidebar-nav li a:hover {
+            background-color: var(--sidebar-hover);
+            border-left-color: var(--info-blue);
+        }
+
+        /* --- MAIN CONTENT AREA --- */
+        .main-content {
+            flex-grow: 1;
+            height: 100vh;
+            overflow-y: auto;
+            position: relative;
+            background-color: var(--primary-bg);
+            transition: margin-left var(--transition-speed) ease;
+            scroll-behavior: smooth;
+        }
+
+        .top-bar {
+            background-color: var(--card-bg);
+            padding: 1rem 2rem;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+            display: flex;
+            align-items: center;
+            position: sticky;
+            top: 0;
+            z-index: 10;
+        }
+
+        .toggle-btn {
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: var(--sidebar-bg);
+            margin-right: 1rem;
+        }
+
+        .content-section {
+            padding: 3rem;
+            max-width: 1200px;
+            margin: 0 auto;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        /* --- LANDING PAGE STYLES --- */
+        .landing-card {
+            background: var(--card-bg);
+            color: var(--text-dark);
+            padding: 4rem;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+            border-top: 8px solid var(--sidebar-bg);
+            margin-bottom: 2rem;
+            text-align: center;
+        }
+        
+        .doc-link {
+            display: inline-block;
+            color: var(--info-blue);
+            text-decoration: none;
+            font-weight: bold;
+            font-size: 1.1rem;
+            margin-top: 1.5rem;
+            padding: 0.5rem 1rem;
+            border: 2px solid var(--info-blue);
+            border-radius: 6px;
+            transition: all 0.3s ease;
+        }
+
+        .doc-link:hover {
+            background-color: var(--info-blue);
+            color: white;
+            text-decoration: none;
+        }
+
+        /* --- GRID LAYOUTS FOR CONTENT --- */
+        .grid-2-col {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+
+        .card {
+            background: var(--card-bg);
+            padding: 2rem;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+            border: 1px solid var(--border-color);
+        }
+
+        /* --- MEDIA & PLACEHOLDERS --- */
+        .media-container {
+            background-color: #f1f5f9;
+            border: 1px solid #cbd5e1;
+            border-radius: 8px;
+            padding: 0.5rem;
+            margin-bottom: 1rem;
+            text-align: center;
+            overflow: hidden;
+        }
+
+        .media-container img {
+            width: 100%;
+            height: auto;
+            border-radius: 4px;
+            display: block;
+            background-color: #e2e8f0; 
+            min-height: 200px; 
+        }
+
+        .filename-label {
+            display: block;
+            background: var(--sidebar-bg);
+            color: white;
+            font-family: monospace;
+            font-size: 0.85rem;
+            padding: 0.4rem;
+            margin-top: 0.5rem;
+            border-radius: 4px;
+        }
+
+        /* --- TABLES & TAGS --- */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 1.5rem;
+            background-color: var(--card-bg);
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+        }
+        th, td {
+            padding: 1rem;
+            text-align: left;
+            border-bottom: 1px solid var(--border-color);
+        }
+        th { background-color: var(--sidebar-bg); color: var(--text-light); }
+        .violation-tag { 
+            background-color: var(--hazard-red); 
+            color: white; 
+            padding: 0.3rem 0.6rem; 
+            border-radius: 4px; 
+            font-size: 0.85rem; 
+            font-weight: bold; 
+            letter-spacing: 0.5px;
+        }
+
+        /* --- KINETIC MATH (GREEN) --- */
+        .math-block {
+            background: var(--math-bg);
+            padding: 1.5rem;
+            border-left: 4px solid var(--math-green);
+            color: #064e3b; 
+            font-family: monospace;
+            font-size: 1.1rem;
+            margin: 1rem 0;
+            border-radius: 0 4px 4px 0;
+        }
+
+        /* --- BLINKING ANIMATIONS & BUTTONS --- */
+        @keyframes pulse-opacity {
+            0% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.75; transform: scale(1.02); }
+            100% { opacity: 1; transform: scale(1); }
+        }
+
+        @keyframes pulse-red-shadow {
+            0% { box-shadow: 0 0 0 0 rgba(220, 38, 38, 0.7); transform: scale(1); }
+            70% { box-shadow: 0 0 0 15px rgba(220, 38, 38, 0); transform: scale(1.05); }
+            100% { box-shadow: 0 0 0 0 rgba(220, 38, 38, 0); transform: scale(1); }
+        }
+
+        .btn-blink-blue {
+            display: block;
+            background-color: var(--info-blue);
+            color: white;
+            padding: 1rem;
+            border-radius: 6px;
+            text-align: center;
+            font-weight: bold;
+            text-decoration: none;
+            margin-bottom: 1rem;
+            animation: pulse-opacity 2s infinite;
+            transition: background 0.3s;
+        }
+
+        .btn-blink-blue:hover {
+            background-color: #1d4ed8;
+            color: white;
+            text-decoration: none;
+        }
+
+        .btn-cta-red {
+            display: inline-block;
+            background-color: var(--hazard-red);
+            color: white;
+            padding: 1.25rem 2.5rem;
+            border-radius: 8px;
+            font-size: 1.25rem;
+            font-weight: bold;
+            text-decoration: none;
+            letter-spacing: 1px;
+            animation: pulse-red-shadow 2s infinite;
+            margin: 2rem 0;
+        }
+        
+        .btn-cta-red:hover {
+            color: white;
+            text-decoration: none;
+        }
+
+        /* --- BEFORE / AFTER STYLES --- */
+        .before-after-container {
+            margin-bottom: 2rem;
+            text-align: left;
+        }
+
+        .before-after-header {
+            padding: 1rem;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            border-radius: 8px 8px 0 0;
+            color: white;
+            text-align: center;
+        }
+
+        .before-header { background-color: var(--hazard-red); }
+        .after-header { background-color: var(--math-green); }
+
+        .before-after-card {
+            background: white;
+            border: 1px solid var(--border-color);
+            border-top: none;
+            border-radius: 0 0 8px 8px;
+            padding: 1rem;
+            box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05);
+        }
+
+        /* --- CONTACT CARDS LAYOUT --- */
+        .contact-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1.5rem;
+            margin-top: 3rem;
+            text-align: left;
+        }
+
+        .contact-card {
+            background: var(--primary-bg);
+            padding: 1.5rem;
+            border-radius: 8px;
+            border: 1px solid var(--border-color);
+            box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05);
+        }
+
+        @media (max-width: 900px) {
+            .grid-2-col { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+
+    <nav class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+            <h2>Pendleton Proposal</h2>
+        </div>
+        <ul class="sidebar-nav">
+            <li><a href="#intro">Introduction</a></li>
+            <li><a href="#overview">I. Overview & Hazard</a></li>
+            <li><a href="#evidence">II. Empirical Evidence</a></li>
+            <li><a href="#regulatory">III. Regulatory & Structural</a></li>
+            <li><a href="#action">IV. Action Plan</a></li>
+            <li><a href="#contact" style="color: #fca5a5; font-weight: bold;">Submit / Contact</a></li>
+        </ul>
+    </nav>
+
+    <main class="main-content" id="main-scroll-area">
+        <div class="top-bar">
+            <button class="toggle-btn" onclick="toggleSidebar()">☰</button>
+            <span style="font-weight: 500; color: var(--text-muted);">Chapel Crossings Perimeter Safety Initiative</span>
+        </div>
+
+        <section id="intro" class="content-section">
+            <div class="landing-card">
+                <p style="text-transform: uppercase; letter-spacing: 2px; margin-bottom: 1rem; color: var(--text-muted); font-weight: bold;">Project Proposal</p>
+                <h1 style="color: var(--info-black);">Perimeter Safety and Traffic Mitigation Barrier</h1>
+                <p style="color: var(--text-muted); font-size: 1.2rem; margin-top: 1rem;">The Residents and Property Owners of Pendleton at Chapel Crossings</p>
+                <p style="font-size: 1rem; margin-top: 0.5rem; color: var(--text-muted);">June 2026</p>
+                
+                <a href="https://docs.google.com/document/d/1kvGKzlMvDtGj_TCwL8kg4lWbwz_fg6qLGA1bEVy1B5g/edit?usp=sharing" class="doc-link" target="_blank">
+                    📄 View PDF Document Version
+                </a>
+            </div>
+        </section>
+
+        <section id="overview" class="content-section">
+            <h2>I. Overview</h2>
+            <div class="card" style="margin-bottom: 2rem; border-left: 4px solid var(--info-blue);">
+                <h3 style="margin-top: 0;">Objective</h3>
+                <p>To secure immediate municipal and developer funding for the engineering, surveying, and construction of an FDOT-compliant, steel-reinforced precast concrete crash barrier along the Chapel Crossings residential perimeter bordering County Road 54 / State Road 54 (SR 54).</p>
+            </div>
+
+            <div class="grid-2-col">
+                <div>
+                    <h3 style="color: var(--hazard-red);">The Hazard & Clear Zone Deficiency</h3>
+                    <p>State Road 54 is one of the most critical and heavily trafficked east-west arterials in the Tampa Bay region. Long-range projections indicate traffic volumes on this corridor could reach 98,000 vehicles per day, causing massive capacity strains. Residential properties on Pendleton Landing Circle have been platted in immediate proximity to a sharp horizontal curve on SR 54.</p>
+                    <p>Speed limits headed east in the range of 51-65 mph posted as a map layer by the Florida Department of Transportation and maintained by the Transportation Data & Analytics office (TDA) as of 6/27/2026.</p>
+                    <p>Due to excessive vehicular velocity, inadequate traffic calming, and a deficient "Clear Zone"—defined by FDOT as the unobstructed, traversable roadside area that allows a driver to regain control of a vehicle—this curve is a chronic site for Vehicular Roadway Departure (VRD) events. Under FDOT FDM 215, facilities with design speeds of 45 to 55 mph demand strict New Construction Clear Zone widths ranging from 24 to 30 feet. In the image below, you can see there is insufficient space as well as no wall or barrier.</p>
+                </div>
+                <div>
+                    <div class="media-container">
+                        <img src="clear_zone_deficiency.png" alt="Map Layer of Speed Limits and Deficient Clear Zone">
+                        <span class="filename-label">File: clear_zone_deficiency.png</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="evidence" class="content-section">
+            <h2>II. Empirical Evidence & Liability</h2>
+            
+            <div class="card" style="margin-bottom: 2rem; background-color: var(--hazard-bg); border: 1px solid #fca5a5; border-left: 6px solid var(--hazard-red);">
+                <h3 style="margin-top: 0; color: var(--hazard-red);">The Catalyst & Liability Escalation</h3>
+                <p>The urgency of this petition is underscored by a recent, catastrophic Right-of-Way (ROW) breach where an errant vehicle sheared a light pole and propelled debris into a residential yard. There was also evidence of an alcoholic beverage that may indicate either a drunk driver or from construction work.</p>
+                <p>By platting and selling lots with backyards completely exposed to the outside radius of a known high-speed curve, the CDD has actively created a "Foreseeable Zone of Risk". Under the landmark Florida Supreme Court case <em>McCain v. Florida Power Corp.</em>, this conduct legally generates a duty of care to lessen the risk and protect others from harm. The lack of barrier currently in place possesses zero structural kinetic capacity to arrest a 4,000-pound vehicle traveling at 45 mph, representing a direct breach of this legal duty. Should the developer attempt to deflect liability to homeowners using the "Slavin Doctrine" (arguing the danger was obvious upon purchase), the residents maintain that the complete structural failure of a barrier constitutes a highly technical, hidden "latent defect" in the community's master safety design.</p>
+                
+                <div class="media-container" style="max-width: 600px; margin: 1.5rem auto 0 auto; background: white;">
+                    <img src="sheared_light_pole_damage.png" alt="Damage from sheared light pole incident">
+                    <span class="filename-label">File: sheared_light_pole_damage.png</span>
+                </div>
+            </div>
+
+            <div class="card" style="margin-bottom: 2rem; border-left: 4px solid var(--info-blue);">
+                <h3>Community’s Calling</h3>
+                <p>Recent discourse within the Wesley Chapel Community Facebook group reveals a mounting consensus among local residents regarding a significant increase in reckless and aggressive driving in the area. Many community members have taken to the platform to document their daily frustrations, noting that these behaviors are putting both new and experienced drivers at risk. The overarching sentiment is one of bewilderment at the declining quality of road safety, with one resident expressing, "I'm lost have people forgotten how to drive? I've never seen so much bad driving as I have the last 2 days." Another member bluntly asserted that "people need to go back to driving school," observing that many motorists "drive to reckless and clearly don't understand the laws of the roads."</p>
+                <p>Specific anecdotes shared within the group highlight highly dangerous, impatient maneuvers that routinely endanger the public. For example, one resident recounted a startling incident where their vehicle was safely and legally entering a left-turn lane, only to have the driver behind them "go around us on a single-lane road, driving over the yellow lines just to beat us into the turn lane." Other locals have pointed out the illogical nature of this pervasive impatience. One commuter questioned why motorists are constantly "in a hurry to get to the red light," noting that people frequently "rush around get in front of someone to slam on the brakes," a practice that "makes absolutely no sense" and disrupts the flow of traffic for everyone.</p>
+                <p>Furthermore, community members who drive frequently for work have observed a general "lack of awareness" on local routes, with specific hazardous incidents being reported on major thoroughfares like Wesley Chapel Boulevard near the Stagecoach neighborhood, as well as in close proximity to local schools like Cypress Creek Middle School. Ultimately, these firsthand accounts aggregated from the Wesley Chapel Community page paint a clear picture of a neighborhood increasingly alarmed by hazardous road conditions and collectively calling for an immediate return to basic traffic safety and mutual respect on the roads.</p>
+            </div>
+
+            <div class="grid-2-col">
+                <div class="card">
+                    <h3>High Injury Network (HIN) & Video Evidence</h3>
+                    <p>Between 2019 and 2023, Pasco County recorded over 50,000 total crashes, resulting in 472 fatal crashes (Pasco County MPO, Long Range Transportation Plan). Consequently, SR 54 is explicitly identified as a primary corridor on the county's High Injury Network alongside US 19 and US 301 (Pasco County, Safety Action Plan). The recent light pole shearing is not an isolated anomaly; it is a statistical inevitability validated by this data.</p>
+                    <p>Over the past year, Wesley Chapel has experienced a concerning series of severe traffic incidents, accidents, and roadway emergencies that have heavily impacted the growing Pasco County community. Just days ago, on June 27, 2026, a massive collision shut down Interstate 75 Northbound near mile marker 280 for hours when a semi-truck hauling an oversized evaporator tank attempted a lane change, causing the rear trailer to detach and completely crush a passenger SUV; miraculously, the two women inside escaped with only minor injuries.</p>
+                    <p>This major highway disruption followed a tragic fatal hit-and-run earlier in the month at the intersection of Handcart Road and Old Bridge Road, where a 70-year-old Wesley Chapel resident was arrested after turning his vehicle into the path of a motorcycle, resulting in the death of a 31-year-old rider. The community's residential areas have also seen profound heartbreak, including the devastating loss of a 12-year-old middle school student who was killed while riding an electric skateboard in the Crosswinds neighborhood, as well as an 87-year-old man who died after his Tesla, operating in autopilot mode, struck an electrical box and sank into a local pond. Beyond vehicular crashes—which continue to cause major roadblocks at busy intersections like State Road 56 and Wiregrass Ranch Boulevard, County Line Road and Mansfield Boulevard, and a recent collision at Ancient Oaks Boulevard and Ashley Oaks Circle—the area also responded to a shocking small plane crash and explosion within a residential subdivision, underscoring a highly chaotic and tragic year for local emergency responders and commuters alike.</p>
+                </div>
+                <div class="card" style="display: flex; flex-direction: column; justify-content: space-between;">
+                    <div>
+                        <h3>Geographic Crash Verification</h3>
+                        <p>This image shows the recent accidents near our neighborhood in the past year.</p>
+                        <div class="media-container">
+                            <img src="recent_accidents_map.png" alt="Pasco County High Injury Network Map">
+                            <span class="filename-label">File: recent_accidents_map.png</span>
+                        </div>
+                    </div>
+                    <div style="margin-top: 1rem;">
+                        <h3 style="margin-bottom: 0.5rem;">Actionable Telematics</h3>
+                        <a href="https://www.youtube.com/watch?v=wETBwP9MPKQ&feature=youtu.be" target="_blank" class="btn-blink-blue">
+                            ▶ WATCH: Driver runs a red light at the intersection
+                        </a>
+                        <a href="https://youtu.be/RNLkANHW9U0" target="_blank" class="btn-blink-blue">
+                            ▶ WATCH: Driver rear-ends vehicle at the light
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="regulatory" class="content-section">
+            <h2>III. Regulatory Deficiencies & Structural Analysis</h2>
+            <p>The petition avoids the regulatory trap of requesting a "noise wall" under FDM 264, as FDOT's "Date of Public Knowledge" rules legally absolve the state from providing retroactive acoustic mitigation to newer communities. Instead, this structure is mandated as a Roadway Departure Crash Barrier necessitated by direct safety violations.</p>
+            
+            <h3 style="margin-top: 2rem; color: var(--hazard-red);">FDOT Control Zone Violations</h3>
+            <p>FDOT defines "Control Zones" as high-risk areas with a significantly greater frequency of roadway departures, including the outside radius of horizontal curves and locations where an aboveground object has been struck three or more times in five years. Because Chapel Crossings borders a sharp curve and now has a history of hazard strikes, this segment legally qualifies as a Control Zone. FDOT regulations dictate that any roadside hazard within a Control Zone failing to meet full clear zone criteria MUST be shielded by a crash-tested structural barrier.</p>
+
+            <h3 style="margin-top: 1rem; color: var(--hazard-red);">Pasco County Land Development Code (LDC) Violations</h3>
+            <p>Standard, unreinforced PVC or wood fencing violates the aesthetic and safety buffering requirements mandated for Master Planned Unit Development (MPUD) approvals.</p>
+
+            <table>
+                <thead>
+                    <tr>
+                        <th>Pasco County LDC Section</th>
+                        <th>Regulatory Requirement</th>
+                        <th>Application to Chapel Crossings</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Section 500 (Zoning)</td>
+                        <td>100-foot minimum setback from external road rights-of-way for MPUDs.</td>
+                        <td>If lots are closer than 100 feet to SR 54, a variance was required, establishing developer assumption of proximity risk.</td>
+                        <td><span class="violation-tag">VIOLATION</span></td>
+                    </tr>
+                    <tr>
+                        <td>Section 905 (Subdivisions)</td>
+                        <td>Double frontage lots along arterials must be heavily buffered.</td>
+                        <td>Backyards facing SR 54 require continuous structural buffering, not standard privacy fencing.</td>
+                        <td><span class="violation-tag">VIOLATION</span></td>
+                    </tr>
+                    <tr>
+                        <td>Section 1003 (Fences/Walls)</td>
+                        <td>Exceptions to 4-foot fence limits are granted for continuous buffer walls along arterials.</td>
+                        <td>Standard unreinforced fencing violates the intent of structural arterial buffering.</td>
+                        <td><span class="violation-tag">VIOLATION</span></td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <div class="grid-2-col" style="margin-top: 2rem;">
+                <div class="card">
+                    <h3 style="color: var(--math-green);">Structural Vulnerability & Kinetic Energy Analysis</h3>
+                    <p>To objectively prove the inadequacy of the current perimeter fencing, we evaluate the physics of a VRD using standard kinetic energy modeling. The current unreinforced fencing installed by the developer is merely an aesthetic boundary.</p>
+                    <p>We model the kinetic energy (KE) of a standard mid-size SUV (mass m = 1800 kg) departing the roadway at the posted or frequently traveled speeds along SR 54.</p>
+                    <div class="math-block">
+                        <strong>Formula:</strong> KE = &frac12; mv<sup>2</sup><br><br>
+                        <strong>Scenario A: Impact at 45 mph (20.11 m/s)</strong><br>
+                        KE = &frac12; (1800 kg)(20.11 m/s)<sup>2</sup><br>
+                        &approx; <strong>363,970 Joules</strong><br><br>
+                        <strong>Scenario B: Impact at 65 mph (29.05 m/s)</strong><br>
+                        KE = &frac12; (1800 kg)(29.05 m/s)<sup>2</sup><br>
+                        &approx; <strong>759,514 Joules</strong>
+                    </div>
+                </div>
+                <div class="card">
+                    <h3>Conclusion of Structural Forces</h3>
+                    <p>A standard residential vinyl or wood privacy fence is instantly pulverized by localized forces exceeding 300,000 Joules, allowing the vehicle to carry its remaining kinetic energy directly into a residential dwelling or populated backyard.</p>
+                    <p>Only a continuous, steel-reinforced, precast concrete barrier can successfully dissipate this kinetic energy and safely redirect an out-of-control vehicle. <em>Note: A rigid safety barrier compliant with FDM 215 will subsequently provide massive acoustic noise reduction as a secondary physical byproduct.</em></p>
+                </div>
+            </div>
+        </section>
+
+        <section id="action" class="content-section">
+            <h2>IV. Proposed Multi-Agency Action Plan</h2>
+            <p>The residents of Chapel Crossings propose a bifurcated approach to immediately mitigate the safety threat while a permanent infrastructure solution is developed.</p>
+
+            <div class="grid-2-col">
+                <div class="card" style="border-top: 4px solid var(--info-blue);">
+                    <h3 style="color: var(--info-blue); margin-top: 0;">Phase 1: Immediate Traffic Calming & Data Acquisition</h3>
+                    <ul style="padding-left: 1.5rem;">
+                        <li style="margin-bottom: 0.75rem;">Deployment of permanent or semi-permanent radar speed trailers at the approach to the Chapel Crossings curve.</li>
+                        <li style="margin-bottom: 0.75rem;">Deployment of a decoy sheriff’s vehicle at the intersection. I have reached out with the sheriff’s department and filed a complaint earlier this year for the noise of reckless driving in the area to no response.</li>
+                        <li style="margin-bottom: 0.75rem;"><strong>Initiation of highly specific Florida Sunshine Law public records requests to acquire actionable data:</strong>
+                            <ul style="margin-left: 1.5rem; margin-top: 0.5rem; list-style-type: circle;">
+                                <li><strong>To FDOT District 7 (Traffic Operations):</strong> Requesting site-specific crash reports, collision diagrams, and Roadway Departure logs for this segment of SR 54.</li>
+                                <li><strong>To FDOT District 7 (Design Office):</strong> Requesting approved Design Variations/Exceptions regarding Clear Zone criteria for the FPID 416561-2-52-01 widening project.</li>
+                                <li><strong>To Pasco County Planning:</strong> Requesting all MPUD setback variances granted to the CDD that permitted a reduction of the 100-foot buffer.</li>
+                            </ul>
+                        </li>
+                    </ul>
+                </div>
+                <div class="card" style="border-top: 4px solid var(--math-green);">
+                    <h3 style="color: var(--math-green); margin-top: 0;">Phase 2: Permanent Infrastructure Remediation</h3>
+                    <p>Joint funding and engineering surveying for a structural roadway departure crash barrier.</p>
+                    <p>We formally request that the Chapel Crossings POA/ Community Development District (CDD) collaborate with Pasco County to navigate the Land Development Code permitting process to replace the current lack of barrier with a load-bearing protective wall that addresses the latent safety defects inherent in the community's current design.</p>
+                    
+                    <div class="media-container" style="margin-top: 1.5rem;">
+                        <img src="proposed_barrier_blueprint.png" alt="Geographic Aerial Blueprint of Barrier Placement">
+                        <span class="filename-label">File: proposed_barrier_blueprint.png</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="contact" class="content-section" style="text-align: center; padding-top: 2rem; padding-bottom: 6rem; background-color: var(--card-bg);">
+            <h2 style="border-bottom: 2px solid var(--hazard-red); color: var(--hazard-red);">Immediate Action Required</h2>
+            <p style="font-size: 1.2rem; max-width: 800px; margin: 0 auto 2rem auto; color: var(--text-dark);">
+                A structural perimeter barrier is not an aesthetic request; it is a mathematical and legal necessity. Protect our community from an inevitable tragedy. Join the coalition and support the barrier proposal today.
+            </p>
+
+            <div class="grid-2-col before-after-container" style="max-width: 1000px; margin: 0 auto 3rem auto;">
+                <div>
+                    <div class="before-after-header before-header">
+                        BEFORE: Current Hazard
+                    </div>
+                    <div class="before-after-card media-container" style="margin-bottom: 0;">
+                        <img src="image.png" alt="Current Hazard state facing SR 54">
+                        <span class="filename-label">File: image.png</span>
+                    </div>
+                </div>
+                <div>
+                    <div class="before-after-header after-header">
+                        AFTER: Proposed Protection
+                    </div>
+                    <div class="before-after-card media-container" style="margin-bottom: 0;">
+                        <img src="image2.png" alt="Proposed Protective Structural Wall">
+                        <span class="filename-label">File: image2.png</span>
+                    </div>
+                </div>
+            </div>
+            
+            <a href="mailto:kduywork@gmail.com?cc=atay7701@gmail.com" class="btn-cta-red">
+                Acknowledge/Respond
+            </a>
+
+            <div class="contact-grid">
+                <div class="contact-card" style="border-top: 4px solid var(--info-blue);">
+                    <p style="margin-bottom: 0.25rem; font-size: 1.1rem;"><strong>Kevin Duy</strong></p>
+                    <p style="margin-bottom: 1rem; color: var(--text-muted); font-style: italic; font-size: 0.9rem;">Resident & Data Scientist, US Special Operations</p>
+                    <p style="margin-bottom: 0.5rem; font-size: 0.95rem;">✉️ <a href="mailto:kduywork@gmail.com" style="color: var(--text-dark); font-weight: 500;">kduywork@gmail.com</a></p>
+                    <p style="margin-bottom: 0; font-size: 0.95rem;">📞 <a href="tel:7272255444" style="color: var(--text-dark); font-weight: 500;">(727) 225-5444</a></p>
+                </div>
+
+                <div class="contact-card" style="border-top: 4px solid var(--sidebar-bg);">
+                    <p style="margin-bottom: 0.25rem; font-size: 1.1rem;"><strong>Arwen Finn-Wells</strong></p>
+                    <p style="margin-bottom: 1rem; color: var(--text-muted); font-size: 0.9rem;">Resident, Pendleton Landing Circle</p>
+                    <p style="margin-bottom: 0; font-size: 0.95rem;">📞 <a href="tel:7273595178" style="color: var(--text-dark); font-weight: 500;">(727) 359-5178</a></p>
+                </div>
+
+                <div class="contact-card" style="border-top: 4px solid var(--sidebar-bg);">
+                    <p style="margin-bottom: 0.25rem; font-size: 1.1rem;"><strong>Natalie Ross</strong></p>
+                    <p style="margin-bottom: 1rem; color: var(--text-muted); font-size: 0.9rem;">Resident, Pendleton Landing Circle</p>
+                    <p style="margin-bottom: 0; font-size: 0.95rem;">📞 <a href="tel:8134955694" style="color: var(--text-dark); font-weight: 500;">(813) 495-5694</a></p>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <script>
+        // Sidebar Toggle Functionality
+        function toggleSidebar() {
+            const sidebar = document.getElementById('sidebar');
+            sidebar.classList.toggle('collapsed');
+        }
+
+        // Close sidebar on mobile when a link is clicked
+        const navLinks = document.querySelectorAll('.sidebar-nav a');
+        navLinks.forEach(link => {
+            link.addEventListener('click', () => {
+                if (window.innerWidth <= 768) {
+                    document.getElementById('sidebar').classList.add('collapsed');
+                }
+            });
+        });
+    </script>
+</body>
+</html>

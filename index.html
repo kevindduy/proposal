@@ -1,29 +1,57 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="light">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Proposal: Perimeter Safety and Traffic Mitigation Barrier</title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Merriweather:wght@700;900&display=swap" rel="stylesheet">
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
     <style>
-        /* --- HIGH-LEVEL CSS VARIABLES --- */
+        /* --- HIGH-LEVEL CSS VARIABLES (LIGHT THEME) --- */
         :root {
             --primary-bg: #f8fafc;
-            --sidebar-bg: #334155; 
-            --sidebar-hover: #475569;
+            --sidebar-bg: #1e293b; 
+            --sidebar-hover: #334155;
             --text-light: #f8fafc;
-            --text-dark: #1e293b;
-            --text-muted: #64748b;
+            --text-dark: #0f172a;
+            --text-muted: #475569;
             --card-bg: #ffffff;
-            --border-color: #e2e8f0;
-            --sidebar-width: 280px;
+            --border-color: #cbd5e1;
+            --sidebar-width: 300px;
             --transition-speed: 0.3s;
+            --accent-blue: #1e40af;
+            --hazard-maroon: #991b1b;
+            --math-green: #166534;
+            --math-bg: #f0fdf4;
+            --hazard-bg: #fef2f2;
+            --font-sans: 'Inter', sans-serif;
+            --font-serif: 'Merriweather', serif;
+            --shadow-sm: 0 1px 3px rgba(0,0,0,0.1);
+            --shadow-md: 0 4px 6px -1px rgba(0,0,0,0.1);
+        }
 
-            /* STRATEGIC COLOR CODING */
-            --info-blue: #2563eb;     /* For general information & links */
-            --hazard-red: #dc2626;    /* For violations, warnings, critical CTA */
-            --math-green: #059669;    /* For calculations & physics */
-            --math-bg: #ecfdf5;       /* Light green background for math */
-            --hazard-bg: #fef2f2;     /* Light red background for warnings */
+        /* --- STRICT BLACK & GREY DARK THEME --- */
+        [data-theme="dark"] {
+            --primary-bg: #111111;
+            --sidebar-bg: #000000; 
+            --sidebar-hover: #222222;
+            --text-light: #ffffff;
+            --text-dark: #eeeeee;
+            --text-muted: #aaaaaa;
+            --card-bg: #1a1a1a;
+            --border-color: #333333;
+            --accent-blue: #cccccc;
+            --hazard-maroon: #888888;
+            --math-green: #bbbbbb;
+            --math-bg: #222222;
+            --hazard-bg: #222222;
+            --shadow-sm: 0 1px 3px rgba(0,0,0,0.8);
+            --shadow-md: 0 4px 6px -1px rgba(0,0,0,0.8);
         }
 
         /* --- GLOBAL STYLES --- */
@@ -31,7 +59,7 @@
             box-sizing: border-box;
             margin: 0;
             padding: 0;
-            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            font-family: var(--font-sans);
         }
 
         body {
@@ -40,16 +68,62 @@
             display: flex;
             height: 100vh;
             overflow: hidden;
+            transition: background-color var(--transition-speed), color var(--transition-speed);
         }
 
-        /* --- TYPOGRAPHY --- */
-        h1 { font-size: 2.5rem; line-height: 1.2; margin-bottom: 0.5rem; color: var(--text-dark); }
-        h2 { font-size: 1.75rem; margin-bottom: 1rem; color: var(--sidebar-bg); border-bottom: 2px solid var(--info-blue); padding-bottom: 0.25rem; display: inline-block; }
-        h3 { font-size: 1.25rem; margin: 1.5rem 0 0.5rem 0; color: var(--text-dark); }
-        p { line-height: 1.6; margin-bottom: 1rem; color: var(--text-muted); }
-        strong { color: var(--text-dark); }
-        a { color: var(--info-blue); text-decoration: none; }
-        a:hover { text-underline-offset: 3px; text-decoration: underline; }
+        /* --- SCROLL PROGRESS BAR --- */
+        #scroll-progress {
+            position: fixed;
+            top: 0;
+            left: 0;
+            height: 4px;
+            background-color: var(--accent-blue);
+            width: 0%;
+            z-index: 9999;
+            transition: width 0.1s ease-out, background-color var(--transition-speed);
+        }
+
+        /* --- TYPOGRAPHY & FORMATTING --- */
+        h1, h2, .serif-heading { font-family: var(--font-serif); }
+        h1 { font-size: 2.25rem; line-height: 1.3; margin-bottom: 0.5rem; color: var(--text-dark); transition: color var(--transition-speed); }
+        h2 { font-size: 1.5rem; margin-bottom: 1.5rem; color: var(--text-dark); border-bottom: 2px solid var(--border-color); padding-bottom: 0.5rem; transition: color var(--transition-speed), border-color var(--transition-speed); }
+        h3 { font-size: 1.2rem; margin: 1.5rem 0 0.75rem 0; color: var(--text-dark); font-weight: 600; transition: color var(--transition-speed); }
+        p { line-height: 1.7; margin-bottom: 1.25rem; color: var(--text-muted); font-size: 1.05rem; transition: color var(--transition-speed); }
+        strong { color: var(--text-dark); font-weight: 600; transition: color var(--transition-speed); }
+        u { text-decoration-color: var(--accent-blue); text-underline-offset: 4px; transition: text-decoration-color var(--transition-speed); }
+        a { color: var(--accent-blue); text-decoration: none; font-weight: 500; transition: color var(--transition-speed), opacity 0.2s; }
+        a:hover { opacity: 0.8; text-decoration: underline; text-underline-offset: 3px; }
+
+        /* --- TOOLTIPS --- */
+        .tooltip {
+            position: relative;
+            cursor: help;
+            border-bottom: 1px dotted var(--text-muted);
+            color: var(--accent-blue);
+            font-weight: 600;
+            transition: color var(--transition-speed);
+        }
+        .tooltip::after {
+            content: attr(data-tooltip);
+            position: absolute;
+            bottom: 125%;
+            left: 50%;
+            transform: translateX(-50%);
+            background: var(--text-dark);
+            color: var(--primary-bg);
+            padding: 0.5rem 0.75rem;
+            border-radius: 4px;
+            font-size: 0.85rem;
+            font-weight: normal;
+            white-space: nowrap;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.2s ease;
+            z-index: 1000;
+            box-shadow: var(--shadow-md);
+            pointer-events: none;
+        }
+        .tooltip:hover::after { opacity: 1; visibility: visible; }
 
         /* --- SIDEBAR --- */
         .sidebar {
@@ -57,50 +131,34 @@
             background-color: var(--sidebar-bg);
             color: var(--text-light);
             height: 100vh;
-            transition: transform var(--transition-speed) ease;
+            transition: transform var(--transition-speed) ease, background-color var(--transition-speed);
             display: flex;
             flex-direction: column;
             flex-shrink: 0;
             position: relative;
             z-index: 100;
+            will-change: transform;
+            box-shadow: var(--shadow-md);
         }
 
-        .sidebar.collapsed {
-            transform: translateX(-100%);
-            position: absolute;
-        }
+        .sidebar.collapsed { transform: translateX(-100%); position: absolute; }
 
-        .sidebar-header {
-            padding: 2rem 1.5rem;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-        }
+        .sidebar-header { padding: 2rem 1.5rem; border-bottom: 1px solid rgba(255, 255, 255, 0.05); }
+        .sidebar-header h2 { font-size: 1.1rem; color: var(--text-light); border: none; margin: 0; text-transform: uppercase; letter-spacing: 1px; }
 
-        .sidebar-header h2 {
-            font-size: 1.2rem;
-            color: var(--text-light);
-            border: none;
-            margin: 0;
-        }
-
-        .sidebar-nav {
-            list-style: none;
-            padding: 1rem 0;
-            flex-grow: 1;
-        }
-
+        .sidebar-nav { list-style: none; padding: 1rem 0; flex-grow: 1; overflow-y: auto; }
         .sidebar-nav li a {
-            display: block;
-            padding: 0.75rem 1.5rem;
-            color: var(--text-light);
+            display: flex;
+            align-items: center;
+            padding: 0.85rem 1.5rem;
+            color: #cbd5e1;
             text-decoration: none;
-            transition: background var(--transition-speed);
+            transition: background var(--transition-speed), color 0.2s, border-color var(--transition-speed);
             border-left: 4px solid transparent;
+            font-size: 0.95rem;
         }
-
-        .sidebar-nav li a:hover {
-            background-color: var(--sidebar-hover);
-            border-left-color: var(--info-blue);
-        }
+        .sidebar-nav li a i { margin-right: 12px; width: 20px; text-align: center; }
+        .sidebar-nav li a:hover { background-color: var(--sidebar-hover); color: white; border-left-color: var(--accent-blue); }
 
         /* --- MAIN CONTENT AREA --- */
         .main-content {
@@ -109,306 +167,285 @@
             overflow-y: auto;
             position: relative;
             background-color: var(--primary-bg);
-            transition: margin-left var(--transition-speed) ease;
+            transition: margin-left var(--transition-speed) ease, background-color var(--transition-speed);
             scroll-behavior: smooth;
         }
 
         .top-bar {
             background-color: var(--card-bg);
             padding: 1rem 2rem;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+            box-shadow: var(--shadow-sm);
             display: flex;
             align-items: center;
+            justify-content: space-between;
             position: sticky;
             top: 0;
             z-index: 10;
+            border-bottom: 1px solid var(--border-color);
+            transition: background-color var(--transition-speed), border-color var(--transition-speed);
         }
 
-        .toggle-btn {
+        .toggle-btn, .theme-toggle {
             background: none;
             border: none;
-            font-size: 1.5rem;
+            font-size: 1.25rem;
             cursor: pointer;
-            color: var(--sidebar-bg);
-            margin-right: 1rem;
+            color: var(--text-muted);
+            transition: color 0.2s;
         }
+        .toggle-btn:hover, .theme-toggle:hover { color: var(--text-dark); }
 
         .content-section {
-            padding: 3rem;
-            max-width: 1200px;
+            padding: 4rem 3rem;
+            max-width: 1100px;
             margin: 0 auto;
-            border-bottom: 1px solid var(--border-color);
         }
 
         /* --- LANDING PAGE STYLES --- */
         .landing-card {
             background: var(--card-bg);
-            color: var(--text-dark);
             padding: 4rem;
-            border-radius: 8px;
-            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
-            border-top: 8px solid var(--sidebar-bg);
+            border-radius: 6px;
+            box-shadow: var(--shadow-md);
+            border-top: 6px solid var(--sidebar-bg);
             margin-bottom: 2rem;
             text-align: center;
+            transition: background-color var(--transition-speed), border-color var(--transition-speed);
         }
         
         .doc-link {
             display: inline-block;
-            color: var(--info-blue);
-            text-decoration: none;
-            font-weight: bold;
-            font-size: 1.1rem;
-            margin-top: 1.5rem;
-            padding: 0.5rem 1rem;
-            border: 2px solid var(--info-blue);
-            border-radius: 6px;
-            transition: all 0.3s ease;
-        }
-
-        .doc-link:hover {
-            background-color: var(--info-blue);
-            color: white;
-            text-decoration: none;
-        }
-
-        /* --- GRID LAYOUTS FOR CONTENT --- */
-        .grid-2-col {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 2rem;
+            color: var(--accent-blue);
+            font-weight: 600;
             margin-top: 2rem;
+            padding: 0.75rem 1.5rem;
+            border: 1px solid var(--border-color);
+            border-radius: 4px;
+            transition: all 0.2s ease;
         }
+        .doc-link:hover { background-color: var(--primary-bg); border-color: var(--accent-blue); }
 
+        /* --- GRID LAYOUTS & CARDS --- */
+        .grid-2-col { display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; margin-top: 2rem; }
         .card {
             background: var(--card-bg);
-            padding: 2rem;
-            border-radius: 8px;
-            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+            padding: 2.5rem;
+            border-radius: 6px;
+            box-shadow: var(--shadow-sm);
             border: 1px solid var(--border-color);
+            transition: background-color var(--transition-speed), border-color var(--transition-speed);
+        }
+
+        /* --- DROPDOWNS (ACCORDIONS) --- */
+        details.legal-dropdown {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 4px;
+            margin-bottom: 1rem;
+            overflow: hidden;
+            transition: background-color var(--transition-speed), border-color var(--transition-speed);
+        }
+        details.legal-dropdown summary {
+            padding: 1rem 1.5rem;
+            background: var(--primary-bg);
+            font-weight: 600;
+            cursor: pointer;
+            list-style: none;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            color: var(--text-dark);
+            transition: background-color var(--transition-speed), color var(--transition-speed);
+        }
+        details.legal-dropdown summary::-webkit-details-marker { display: none; }
+        details.legal-dropdown summary::after {
+            content: '\f078';
+            font-family: 'Font Awesome 6 Free';
+            font-weight: 900;
+            transition: transform 0.3s;
+        }
+        details[open].legal-dropdown summary::after { transform: rotate(180deg); }
+        .dropdown-content { padding: 1.5rem; border-top: 1px solid var(--border-color); transition: border-color var(--transition-speed); }
+
+        /* --- FLOW DIAGRAM --- */
+        .flow-diagram {
+            display: flex;
+            align-items: stretch;
+            justify-content: space-between;
+            gap: 1rem;
+            margin-top: 2rem;
+        }
+        .flow-step {
+            flex: 1;
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            padding: 2rem;
+            position: relative;
+            box-shadow: var(--shadow-sm);
+            transition: background-color var(--transition-speed), border-color var(--transition-speed);
+        }
+        .flow-arrow {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--text-muted);
+            font-size: 2rem;
+            transition: color var(--transition-speed);
         }
 
         /* --- MEDIA & PLACEHOLDERS --- */
         .media-container {
-            background-color: #f1f5f9;
-            border: 1px solid #cbd5e1;
-            border-radius: 8px;
+            background-color: var(--primary-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
             padding: 0.5rem;
-            margin-bottom: 1rem;
+            margin-bottom: 1.5rem;
             text-align: center;
-            overflow: hidden;
+            transition: background-color var(--transition-speed), border-color var(--transition-speed);
         }
+        .media-container img { width: 100%; height: auto; border-radius: 4px; display: block; }
 
-        .media-container img {
-            width: 100%;
-            height: auto;
-            border-radius: 4px;
-            display: block;
-            background-color: #e2e8f0; 
-            min-height: 200px; 
-        }
-
-        .filename-label {
-            display: block;
-            background: var(--sidebar-bg);
-            color: white;
-            font-family: monospace;
-            font-size: 0.85rem;
-            padding: 0.4rem;
-            margin-top: 0.5rem;
-            border-radius: 4px;
-        }
-
-        /* --- TABLES & TAGS --- */
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-top: 1.5rem;
-            background-color: var(--card-bg);
-            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
-        }
-        th, td {
-            padding: 1rem;
-            text-align: left;
-            border-bottom: 1px solid var(--border-color);
-        }
-        th { background-color: var(--sidebar-bg); color: var(--text-light); }
-        .violation-tag { 
-            background-color: var(--hazard-red); 
-            color: white; 
-            padding: 0.3rem 0.6rem; 
-            border-radius: 4px; 
-            font-size: 0.85rem; 
-            font-weight: bold; 
-            letter-spacing: 0.5px;
-        }
-
-        /* --- KINETIC MATH (GREEN) --- */
+        /* --- TAGS & MATH --- */
+        .violation-tag { background-color: var(--hazard-maroon); color: white; padding: 0.25rem 0.5rem; border-radius: 3px; font-size: 0.75rem; font-weight: bold; letter-spacing: 1px; transition: background-color var(--transition-speed); }
         .math-block {
             background: var(--math-bg);
             padding: 1.5rem;
             border-left: 4px solid var(--math-green);
-            color: #064e3b; 
+            color: var(--text-dark); 
             font-family: monospace;
-            font-size: 1.1rem;
+            font-size: 1.05rem;
             margin: 1rem 0;
             border-radius: 0 4px 4px 0;
+            box-shadow: inset 0 0 10px rgba(0,0,0,0.02);
+            transition: background-color var(--transition-speed), border-color var(--transition-speed), color var(--transition-speed);
         }
 
-        /* --- BLINKING ANIMATIONS & BUTTONS --- */
-        @keyframes pulse-opacity {
-            0% { opacity: 1; transform: scale(1); }
-            50% { opacity: 0.75; transform: scale(1.02); }
-            100% { opacity: 1; transform: scale(1); }
-        }
-
-        @keyframes pulse-red-shadow {
-            0% { box-shadow: 0 0 0 0 rgba(220, 38, 38, 0.7); transform: scale(1); }
-            70% { box-shadow: 0 0 0 15px rgba(220, 38, 38, 0); transform: scale(1.05); }
-            100% { box-shadow: 0 0 0 0 rgba(220, 38, 38, 0); transform: scale(1); }
-        }
-
-        .btn-blink-blue {
+        /* --- BUTTONS --- */
+        .btn-outline {
             display: block;
-            background-color: var(--info-blue);
-            color: white;
+            border: 1px solid var(--accent-blue);
+            color: var(--accent-blue);
             padding: 1rem;
-            border-radius: 6px;
+            border-radius: 4px;
             text-align: center;
-            font-weight: bold;
-            text-decoration: none;
+            font-weight: 600;
             margin-bottom: 1rem;
-            animation: pulse-opacity 2s infinite;
-            transition: background 0.3s;
+            transition: all 0.2s;
         }
-
-        .btn-blink-blue:hover {
-            background-color: #1d4ed8;
-            color: white;
-            text-decoration: none;
-        }
-
-        .btn-cta-red {
+        .btn-outline:hover { background-color: var(--accent-blue); color: white; text-decoration: none; }
+        
+        .btn-cta-primary {
             display: inline-block;
-            background-color: var(--hazard-red);
+            background-color: var(--hazard-maroon);
             color: white;
-            padding: 1.25rem 2.5rem;
-            border-radius: 8px;
-            font-size: 1.25rem;
+            padding: 1.25rem 3rem;
+            border-radius: 4px;
+            font-size: 1.1rem;
             font-weight: bold;
             text-decoration: none;
             letter-spacing: 1px;
-            animation: pulse-red-shadow 2s infinite;
+            box-shadow: 0 4px 14px rgba(0, 0, 0, 0.2);
+            transition: transform 0.2s, box-shadow 0.2s, background-color var(--transition-speed);
             margin: 2rem 0;
         }
-        
-        .btn-cta-red:hover {
-            color: white;
-            text-decoration: none;
+        .btn-cta-primary:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3); color: white; text-decoration: none; }
+
+        /* --- SCROLL TO TOP --- */
+        #scrollTopBtn {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            background-color: var(--sidebar-bg);
+            color: var(--text-light);
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            border: none;
+            font-size: 1.25rem;
+            cursor: pointer;
+            box-shadow: var(--shadow-md);
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.3s, visibility 0.3s, transform 0.2s, background-color var(--transition-speed);
+            z-index: 1000;
         }
+        #scrollTopBtn.visible { opacity: 1; visibility: visible; }
+        #scrollTopBtn:hover { transform: scale(1.1); background-color: var(--sidebar-hover); }
 
-        /* --- BEFORE / AFTER STYLES --- */
-        .before-after-container {
-            margin-bottom: 2rem;
-            text-align: left;
+        /* --- RESPONSIVE DESIGN --- */
+        @media (max-width: 992px) {
+            .grid-2-col, .flow-diagram { grid-template-columns: 1fr; flex-direction: column; }
+            .flow-arrow { transform: rotate(90deg); padding: 1rem 0; }
+            .content-section { padding: 3rem 2rem; }
         }
-
-        .before-after-header {
-            padding: 1rem;
-            font-weight: bold;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            border-radius: 8px 8px 0 0;
-            color: white;
-            text-align: center;
-        }
-
-        .before-header { background-color: var(--hazard-red); }
-        .after-header { background-color: var(--math-green); }
-
-        .before-after-card {
-            background: white;
-            border: 1px solid var(--border-color);
-            border-top: none;
-            border-radius: 0 0 8px 8px;
-            padding: 1rem;
-            box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05);
-        }
-
-        /* --- CONTACT CARDS LAYOUT --- */
-        .contact-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 1.5rem;
-            margin-top: 3rem;
-            text-align: left;
-        }
-
-        .contact-card {
-            background: var(--primary-bg);
-            padding: 1.5rem;
-            border-radius: 8px;
-            border: 1px solid var(--border-color);
-            box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05);
-        }
-
-        @media (max-width: 900px) {
-            .grid-2-col { grid-template-columns: 1fr; }
+        @media (max-width: 768px) {
+            .sidebar { position: fixed; height: 100%; }
+            .content-section { padding: 2rem 1.5rem; }
+            .landing-card { padding: 2rem 1.5rem; }
+            h1 { font-size: 1.75rem; }
         }
     </style>
 </head>
 <body>
 
-    <nav class="sidebar" id="sidebar">
+    <div id="scroll-progress"></div>
+
+    <nav class="sidebar collapsed" id="sidebar">
         <div class="sidebar-header">
             <h2>Pendleton Proposal</h2>
         </div>
         <ul class="sidebar-nav">
-            <li><a href="#intro">Introduction</a></li>
-            <li><a href="#overview">I. Overview & Hazard</a></li>
-            <li><a href="#evidence">II. Empirical Evidence</a></li>
-            <li><a href="#regulatory">III. Regulatory & Structural</a></li>
-            <li><a href="#action">IV. Action Plan</a></li>
-            <li><a href="#contact" style="color: #fca5a5; font-weight: bold;">Submit / Contact</a></li>
+            <li><a href="#intro"><i class="fa-solid fa-file-contract"></i> Introduction</a></li>
+            <li><a href="#overview"><i class="fa-solid fa-triangle-exclamation"></i> I. Overview & Hazard</a></li>
+            <li><a href="#evidence"><i class="fa-solid fa-scale-balanced"></i> II. Empirical Evidence</a></li>
+            <li><a href="#regulatory"><i class="fa-solid fa-gavel"></i> III. Regulatory Deficiencies</a></li>
+            <li><a href="#action"><i class="fa-solid fa-list-check"></i> IV. Action Plan</a></li>
+            <li><a href="#contact" style="color: #aaaaaa;"><i class="fa-solid fa-paper-plane"></i> Submit / Contact</a></li>
         </ul>
     </nav>
 
     <main class="main-content" id="main-scroll-area">
         <div class="top-bar">
-            <button class="toggle-btn" onclick="toggleSidebar()">☰</button>
-            <span style="font-weight: 500; color: var(--text-muted);">Chapel Crossings Perimeter Safety Initiative</span>
+            <div style="display: flex; align-items: center; gap: 1rem;">
+                <button class="toggle-btn" onclick="toggleSidebar()" aria-label="Toggle Menu"><i class="fa-solid fa-bars"></i></button>
+                <span style="font-weight: 600; color: var(--text-muted); font-size: 0.9rem; text-transform: uppercase; letter-spacing: 0.5px;">Chapel Crossings Perimeter Safety Initiative</span>
+            </div>
+            <button class="theme-toggle" onclick="toggleTheme()" aria-label="Toggle Dark Mode" id="themeIcon">
+                <i class="fa-solid fa-moon"></i>
+            </button>
         </div>
 
         <section id="intro" class="content-section">
             <div class="landing-card">
-                <p style="text-transform: uppercase; letter-spacing: 2px; margin-bottom: 1rem; color: var(--text-muted); font-weight: bold;">Project Proposal</p>
-                <h1 style="color: var(--info-black);">Perimeter Safety and Traffic Mitigation Barrier</h1>
-                <p style="color: var(--text-muted); font-size: 1.2rem; margin-top: 1rem;">The Residents and Property Owners of Pendleton at Chapel Crossings</p>
-                <p style="font-size: 1rem; margin-top: 0.5rem; color: var(--text-muted);">June 2026</p>
+                <p style="text-transform: uppercase; letter-spacing: 2px; margin-bottom: 1.5rem; color: var(--text-muted); font-weight: 600; font-size: 0.85rem;">Official Project Proposal</p>
+                <h1 class="serif-heading">Perimeter Safety and Traffic Mitigation Barrier</h1>
+                <p style="color: var(--text-muted); font-size: 1.15rem; margin-top: 1.5rem; font-family: var(--font-serif); font-style: italic;">The Residents and Property Owners of Pendleton at Chapel Crossings</p>
+                <p style="font-size: 0.9rem; margin-top: 0.5rem; color: var(--text-muted); font-weight: 500;">June 2026</p>
                 
                 <a href="https://docs.google.com/document/d/1kvGKzlMvDtGj_TCwL8kg4lWbwz_fg6qLGA1bEVy1B5g/edit?usp=sharing" class="doc-link" target="_blank">
-                    📄 View PDF Document Version
+                    <i class="fa-solid fa-file-pdf" style="margin-right: 8px;"></i> View Official PDF Document
                 </a>
             </div>
         </section>
 
         <section id="overview" class="content-section">
             <h2>I. Overview</h2>
-            <div class="card" style="margin-bottom: 2rem; border-left: 4px solid var(--info-blue);">
-                <h3 style="margin-top: 0;">Objective</h3>
-                <p>To secure immediate municipal and developer funding for the engineering, surveying, and construction of an FDOT-compliant, steel-reinforced precast concrete crash barrier along the Chapel Crossings residential perimeter bordering County Road 54 / State Road 54 (SR 54).</p>
+            <div class="card" style="margin-bottom: 2rem; border-left: 4px solid var(--accent-blue);">
+                <h3 style="margin-top: 0;"><i class="fa-solid fa-bullseye" style="color: var(--accent-blue); margin-right: 8px; transition: color var(--transition-speed);"></i> Objective</h3>
+                <p>To secure immediate municipal and developer funding for the engineering, surveying, and construction of an <span class="tooltip" data-tooltip="Florida Department of Transportation">FDOT</span>-compliant, steel-reinforced precast concrete crash barrier along the Chapel Crossings residential perimeter bordering County Road 54 / State Road 54 (SR 54).</p>
             </div>
 
             <div class="grid-2-col">
                 <div>
-                    <h3 style="color: var(--hazard-red);">The Hazard & Clear Zone Deficiency</h3>
-                    <p>State Road 54 is one of the most critical and heavily trafficked east-west arterials in the Tampa Bay region. Long-range projections indicate traffic volumes on this corridor could reach 98,000 vehicles per day, causing massive capacity strains. Residential properties on Pendleton Landing Circle have been platted in immediate proximity to a sharp horizontal curve on SR 54.</p>
+                    <h3 style="color: var(--hazard-maroon);"><i class="fa-solid fa-radiation" style="margin-right: 8px;"></i> The Hazard & Clear Zone Deficiency</h3>
+                    <p>State Road 54 is one of the most critical and heavily trafficked east-west arterials in the Tampa Bay region. Long-range projections indicate traffic volumes on this corridor could reach <strong>98,000 vehicles per day</strong>, causing massive capacity strains. Residential properties on Pendleton Landing Circle have been platted in immediate proximity to a sharp horizontal curve on SR 54.</p>
                     <p>Speed limits headed east in the range of 51-65 mph posted as a map layer by the Florida Department of Transportation and maintained by the Transportation Data & Analytics office (TDA) as of 6/27/2026.</p>
-                    <p>Due to excessive vehicular velocity, inadequate traffic calming, and a deficient "Clear Zone"—defined by FDOT as the unobstructed, traversable roadside area that allows a driver to regain control of a vehicle—this curve is a chronic site for Vehicular Roadway Departure (VRD) events. Under FDOT FDM 215, facilities with design speeds of 45 to 55 mph demand strict New Construction Clear Zone widths ranging from 24 to 30 feet. In the image below, you can see there is insufficient space as well as no wall or barrier.</p>
+                    <p>Due to excessive vehicular velocity, inadequate traffic calming, and a deficient <span class="tooltip" data-tooltip="The unobstructed, traversable roadside area that allows a driver to regain control of a vehicle">"Clear Zone"</span>, this curve is a chronic site for <span class="tooltip" data-tooltip="Vehicular Roadway Departure">VRD</span> events. Under FDOT FDM 215, facilities with design speeds of 45 to 55 mph demand strict New Construction Clear Zone widths ranging from <u>24 to 30 feet</u>. In the image below, you can see there is insufficient space as well as no wall or barrier.</p>
                 </div>
                 <div>
                     <div class="media-container">
-                        <img src="clear_zone_deficiency.png" alt="Map Layer of Speed Limits and Deficient Clear Zone">
-                        <span class="filename-label">File: clear_zone_deficiency.png</span>
+                        <img src="clear_zone_deficiency.png" alt="Map Layer of Speed Limits and Deficient Clear Zone" onerror="this.src='data:image/svg+xml;charset=UTF-8,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%22100%25%22 height=%22250%22 background=%22%23e2e8f0%22%3E%3Ctext x=%2250%25%22 y=%2250%25%22 dominant-baseline=%22middle%22 text-anchor=%22middle%22 font-family=%22sans-serif%22 font-size=%2214px%22 fill=%22%2364748b%22%3EImage Placeholder%3C/text%3E%3C/svg%3E';">
                     </div>
                 </div>
             </div>
@@ -417,53 +454,50 @@
         <section id="evidence" class="content-section">
             <h2>II. Empirical Evidence & Liability</h2>
             
-            <div class="card" style="margin-bottom: 2rem; background-color: var(--hazard-bg); border: 1px solid #fca5a5; border-left: 6px solid var(--hazard-red);">
-                <h3 style="margin-top: 0; color: var(--hazard-red);">The Catalyst & Liability Escalation</h3>
+            <div class="card" style="margin-bottom: 2rem; background-color: var(--hazard-bg); border-left: 4px solid var(--hazard-maroon);">
+                <h3 style="margin-top: 0; color: var(--hazard-maroon);"><i class="fa-solid fa-triangle-exclamation" style="margin-right: 8px;"></i> The Catalyst & Liability Escalation</h3>
                 <p>The urgency of this petition is underscored by a recent, catastrophic Right-of-Way (ROW) breach where an errant vehicle sheared a light pole and propelled debris into a residential yard. There was also evidence of an alcoholic beverage that may indicate either a drunk driver or from construction work.</p>
-                <p>By platting and selling lots with backyards completely exposed to the outside radius of a known high-speed curve, the CDD has actively created a "Foreseeable Zone of Risk". Under the landmark Florida Supreme Court case <em>McCain v. Florida Power Corp.</em>, this conduct legally generates a duty of care to lessen the risk and protect others from harm. The lack of barrier currently in place possesses zero structural kinetic capacity to arrest a 4,000-pound vehicle traveling at 45 mph, representing a direct breach of this legal duty. Should the developer attempt to deflect liability to homeowners using the "Slavin Doctrine" (arguing the danger was obvious upon purchase), the residents maintain that the complete structural failure of a barrier constitutes a highly technical, hidden "latent defect" in the community's master safety design.</p>
+                <p>By platting and selling lots with backyards completely exposed to the outside radius of a known high-speed curve, the <span class="tooltip" data-tooltip="Community Development District">CDD</span> has actively created a <strong>"Foreseeable Zone of Risk"</strong>. Under the landmark Florida Supreme Court case <em>McCain v. Florida Power Corp.</em>, this conduct legally generates a duty of care to lessen the risk and protect others from harm. The lack of barrier currently in place possesses <u>zero structural kinetic capacity</u> to arrest a 4,000-pound vehicle traveling at 45 mph, representing a direct breach of this legal duty. Should the developer attempt to deflect liability to homeowners using the "Slavin Doctrine" (arguing the danger was obvious upon purchase), the residents maintain that the complete structural failure of a barrier constitutes a highly technical, hidden "latent defect" in the community's master safety design.</p>
                 
-                <div class="media-container" style="max-width: 600px; margin: 1.5rem auto 0 auto; background: white;">
-                    <img src="sheared_light_pole_damage.png" alt="Damage from sheared light pole incident">
-                    <span class="filename-label">File: sheared_light_pole_damage.png</span>
+                <div class="media-container" style="max-width: 600px; margin: 1.5rem auto 0 auto;">
+                    <img src="sheared_light_pole_damage.png" alt="Damage from sheared light pole incident" onerror="this.src='data:image/svg+xml;charset=UTF-8,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%22100%25%22 height=%22200%22 background=%22%23e2e8f0%22%3E%3Ctext x=%2250%25%22 y=%2250%25%22 dominant-baseline=%22middle%22 text-anchor=%22middle%22 font-family=%22sans-serif%22 font-size=%2214px%22 fill=%22%2364748b%22%3EImage Placeholder%3C/text%3E%3C/svg%3E';">
                 </div>
             </div>
 
-            <div class="card" style="margin-bottom: 2rem; border-left: 4px solid var(--info-blue);">
-                <h3>Community’s Calling</h3>
+            <div class="card" style="margin-bottom: 2rem;">
+                <h3><i class="fa-solid fa-users" style="color: var(--accent-blue); margin-right: 8px; transition: color var(--transition-speed);"></i> Community’s Calling</h3>
                 <p>Recent discourse within the Wesley Chapel Community Facebook group reveals a mounting consensus among local residents regarding a significant increase in reckless and aggressive driving in the area. Many community members have taken to the platform to document their daily frustrations, noting that these behaviors are putting both new and experienced drivers at risk. The overarching sentiment is one of bewilderment at the declining quality of road safety, with one resident expressing, "I'm lost have people forgotten how to drive? I've never seen so much bad driving as I have the last 2 days." Another member bluntly asserted that "people need to go back to driving school," observing that many motorists "drive to reckless and clearly don't understand the laws of the roads."</p>
                 <p>Specific anecdotes shared within the group highlight highly dangerous, impatient maneuvers that routinely endanger the public. For example, one resident recounted a startling incident where their vehicle was safely and legally entering a left-turn lane, only to have the driver behind them "go around us on a single-lane road, driving over the yellow lines just to beat us into the turn lane." Other locals have pointed out the illogical nature of this pervasive impatience. One commuter questioned why motorists are constantly "in a hurry to get to the red light," noting that people frequently "rush around get in front of someone to slam on the brakes," a practice that "makes absolutely no sense" and disrupts the flow of traffic for everyone.</p>
                 <p>Furthermore, community members who drive frequently for work have observed a general "lack of awareness" on local routes, with specific hazardous incidents being reported on major thoroughfares like Wesley Chapel Boulevard near the Stagecoach neighborhood, as well as in close proximity to local schools like Cypress Creek Middle School. Ultimately, these firsthand accounts aggregated from the Wesley Chapel Community page paint a clear picture of a neighborhood increasingly alarmed by hazardous road conditions and collectively calling for an immediate return to basic traffic safety and mutual respect on the roads.</p>
 
-                <div class="media-container" style="max-width: 500px; margin: 1.5rem auto 0 auto; background: white;">
-                    <img src="post.png" alt="Facebook post from a resident showing a vehicle that ran off the road near backyards">
-                    <span class="filename-label">File: <post class="png"></post></span>
-                    <p style="padding: 0.75rem; font-size: 0.9rem; margin-bottom: 0; color: var(--text-dark); text-align: left;"><strong>Description:</strong> A December 2025 post from the Chapel Crossings Residents Facebook group documenting a vehicle that failed to negotiate the turn, stopping dangerously close to residential backyards and explicitly highlighting the community's frustration over the lack of a protective wall.</p>
+                <div class="media-container" style="max-width: 500px; margin: 1.5rem auto 0 auto;">
+                    <img src="post.png" alt="Facebook post from a resident showing a vehicle that ran off the road near backyards" onerror="this.src='data:image/svg+xml;charset=UTF-8,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%22100%25%22 height=%22200%22 background=%22%23e2e8f0%22%3E%3Ctext x=%2250%25%22 y=%2250%25%22 dominant-baseline=%22middle%22 text-anchor=%22middle%22 font-family=%22sans-serif%22 font-size=%2214px%22 fill=%22%2364748b%22%3EImage Placeholder%3C/text%3E%3C/svg%3E';">
+                    <p style="padding: 1rem; font-size: 0.9rem; margin-bottom: 0; text-align: left; background: var(--primary-bg); border-top: 1px solid var(--border-color); transition: background-color var(--transition-speed), border-color var(--transition-speed);"><strong>Description:</strong> A December 2025 post from the Chapel Crossings Residents Facebook group documenting a vehicle that failed to negotiate the turn, stopping dangerously close to residential backyards and explicitly highlighting the community's frustration over the lack of a protective wall.</p>
                 </div>
             </div>
 
             <div class="grid-2-col">
                 <div class="card">
-                    <h3>High Injury Network (HIN) & Video Evidence</h3>
+                    <h3><i class="fa-solid fa-map-location-dot" style="color: var(--accent-blue); margin-right: 8px; transition: color var(--transition-speed);"></i> High Injury Network (HIN) & Video Evidence</h3>
                     <p>Between 2019 and 2023, Pasco County recorded over 50,000 total crashes, resulting in 472 fatal crashes (Pasco County MPO, Long Range Transportation Plan). Consequently, SR 54 is explicitly identified as a primary corridor on the county's High Injury Network alongside US 19 and US 301 (Pasco County, Safety Action Plan). The recent light pole shearing is not an isolated anomaly; it is a statistical inevitability validated by this data.</p>
                     <p>Over the past year, Wesley Chapel has experienced a concerning series of severe traffic incidents, accidents, and roadway emergencies that have heavily impacted the growing Pasco County community. Just days ago, on June 27, 2026, a massive collision shut down Interstate 75 Northbound near mile marker 280 for hours when a semi-truck hauling an oversized evaporator tank attempted a lane change, causing the rear trailer to detach and completely crush a passenger SUV; miraculously, the two women inside escaped with only minor injuries.</p>
                     <p>This major highway disruption followed a tragic fatal hit-and-run earlier in the month at the intersection of Handcart Road and Old Bridge Road, where a 70-year-old Wesley Chapel resident was arrested after turning his vehicle into the path of a motorcycle, resulting in the death of a 31-year-old rider. The community's residential areas have also seen profound heartbreak, including the devastating loss of a 12-year-old middle school student who was killed while riding an electric skateboard in the Crosswinds neighborhood, as well as an 87-year-old man who died after his Tesla, operating in autopilot mode, struck an electrical box and sank into a local pond. Beyond vehicular crashes—which continue to cause major roadblocks at busy intersections like State Road 56 and Wiregrass Ranch Boulevard, County Line Road and Mansfield Boulevard, and a recent collision at Ancient Oaks Boulevard and Ashley Oaks Circle—the area also responded to a shocking small plane crash and explosion within a residential subdivision, underscoring a highly chaotic and tragic year for local emergency responders and commuters alike.</p>
                 </div>
-                <div class="card" style="display: flex; flex-direction: column; justify-content: space-between;">
-                    <div>
+                <div style="display: flex; flex-direction: column; gap: 2rem;">
+                    <div class="card">
                         <h3>Geographic Crash Verification</h3>
                         <p>This image shows the recent accidents near our neighborhood in the past year.</p>
-                        <div class="media-container">
-                            <img src="recent_accidents_map.png" alt="Pasco County High Injury Network Map">
-                            <span class="filename-label">File: recent_accidents_map.png</span>
+                        <div class="media-container" style="margin-bottom: 0;">
+                            <img src="recent_accidents_map.png" alt="Pasco County High Injury Network Map" onerror="this.src='data:image/svg+xml;charset=UTF-8,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%22100%25%22 height=%22200%22 background=%22%23e2e8f0%22%3E%3Ctext x=%2250%25%22 y=%2250%25%22 dominant-baseline=%22middle%22 text-anchor=%22middle%22 font-family=%22sans-serif%22 font-size=%2214px%22 fill=%22%2364748b%22%3EImage Placeholder%3C/text%3E%3C/svg%3E';">
                         </div>
                     </div>
-                    <div style="margin-top: 1rem;">
-                        <h3 style="margin-bottom: 0.5rem;">Actionable Telematics</h3>
-                        <a href="https://www.youtube.com/watch?v=wETBwP9MPKQ&feature=youtu.be" target="_blank" class="btn-blink-blue">
-                            ▶ WATCH: Driver runs a red light at the intersection
+                    <div class="card">
+                        <h3 style="margin-top: 0; margin-bottom: 1rem;"><i class="fa-solid fa-video" style="color: var(--accent-blue); margin-right: 8px; transition: color var(--transition-speed);"></i> Actionable Telematics</h3>
+                        <a href="https://www.youtube.com/watch?v=wETBwP9MPKQ&feature=youtu.be" target="_blank" class="btn-outline">
+                            <i class="fa-solid fa-play" style="margin-right: 8px;"></i> WATCH: Driver runs a red light
                         </a>
-                        <a href="https://youtu.be/RNLkANHW9U0" target="_blank" class="btn-blink-blue">
-                            ▶ WATCH: Driver rear-ends vehicle at the light
+                        <a href="https://youtu.be/RNLkANHW9U0" target="_blank" class="btn-outline" style="margin-bottom: 0;">
+                            <i class="fa-solid fa-play" style="margin-right: 8px;"></i> WATCH: Driver rear-ends vehicle
                         </a>
                     </div>
                 </div>
@@ -474,46 +508,43 @@
             <h2>III. Regulatory Deficiencies & Structural Analysis</h2>
             <p>The petition avoids the regulatory trap of requesting a "noise wall" under FDM 264, as FDOT's "Date of Public Knowledge" rules legally absolve the state from providing retroactive acoustic mitigation to newer communities. Instead, this structure is mandated as a Roadway Departure Crash Barrier necessitated by direct safety violations.</p>
             
-            <h3 style="margin-top: 2rem; color: var(--hazard-red);">FDOT Control Zone Violations</h3>
-            <p>FDOT defines "Control Zones" as high-risk areas with a significantly greater frequency of roadway departures, including the outside radius of horizontal curves and locations where an aboveground object has been struck three or more times in five years. Because Chapel Crossings borders a sharp curve and now has a history of hazard strikes, this segment legally qualifies as a Control Zone. FDOT regulations dictate that any roadside hazard within a Control Zone failing to meet full clear zone criteria MUST be shielded by a crash-tested structural barrier.</p>
+            <details class="legal-dropdown" style="margin-top: 2rem;">
+                <summary style="color: var(--hazard-maroon);"><span style="display: flex; align-items: center;"><i class="fa-solid fa-circle-exclamation" style="margin-right: 12px;"></i> FDOT Control Zone Violations</span></summary>
+                <div class="dropdown-content">
+                    <p style="margin-bottom: 0;">FDOT defines "Control Zones" as high-risk areas with a significantly greater frequency of roadway departures, including the outside radius of horizontal curves and locations where an aboveground object has been struck three or more times in five years. Because Chapel Crossings borders a sharp curve and now has a history of hazard strikes, this segment legally qualifies as a Control Zone. FDOT regulations dictate that any roadside hazard within a Control Zone failing to meet full clear zone criteria <strong>MUST be shielded by a crash-tested structural barrier.</strong></p>
+                </div>
+            </details>
 
-            <h3 style="margin-top: 1rem; color: var(--hazard-red);">Pasco County Land Development Code (LDC) Violations</h3>
-            <p>Standard, unreinforced PVC or wood fencing violates the aesthetic and safety buffering requirements mandated for Master Planned Unit Development (MPUD) approvals.</p>
+            <h3 style="margin-top: 2rem; margin-bottom: 1rem;"><i class="fa-solid fa-book-open" style="color: var(--accent-blue); margin-right: 8px; transition: color var(--transition-speed);"></i> Pasco County Land Development Code (LDC) Violations</h3>
+            <p>Standard, unreinforced PVC or wood fencing violates the aesthetic and safety buffering requirements mandated for Master Planned Unit Development (MPUD) approvals. <em>(Click to expand statutes)</em></p>
 
-            <table>
-                <thead>
-                    <tr>
-                        <th>Pasco County LDC Section</th>
-                        <th>Regulatory Requirement</th>
-                        <th>Application to Chapel Crossings</th>
-                        <th>Status</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td>Section 500 (Zoning)</td>
-                        <td>100-foot minimum setback from external road rights-of-way for MPUDs.</td>
-                        <td>If lots are closer than 100 feet to SR 54, a variance was required, establishing developer assumption of proximity risk.</td>
-                        <td><span class="violation-tag">VIOLATION</span></td>
-                    </tr>
-                    <tr>
-                        <td>Section 905 (Subdivisions)</td>
-                        <td>Double frontage lots along arterials must be heavily buffered.</td>
-                        <td>Backyards facing SR 54 require continuous structural buffering, not standard privacy fencing.</td>
-                        <td><span class="violation-tag">VIOLATION</span></td>
-                    </tr>
-                    <tr>
-                        <td>Section 1003 (Fences/Walls)</td>
-                        <td>Exceptions to 4-foot fence limits are granted for continuous buffer walls along arterials.</td>
-                        <td>Standard unreinforced fencing violates the intent of structural arterial buffering.</td>
-                        <td><span class="violation-tag">VIOLATION</span></td>
-                    </tr>
-                </tbody>
-            </table>
+            <details class="legal-dropdown">
+                <summary>Section 500 (Zoning)<span class="violation-tag" style="margin-left: auto; margin-right: 1rem;">VIOLATION</span></summary>
+                <div class="dropdown-content">
+                    <p><strong>Regulatory Requirement:</strong> 100-foot minimum setback from external road rights-of-way for MPUDs.</p>
+                    <p style="margin-bottom: 0;"><strong>Application to Chapel Crossings:</strong> If lots are closer than 100 feet to SR 54, a variance was required, establishing developer assumption of proximity risk.</p>
+                </div>
+            </details>
 
-            <div class="grid-2-col" style="margin-top: 2rem;">
-                <div class="card">
-                    <h3 style="color: var(--math-green);">Structural Vulnerability & Kinetic Energy Analysis</h3>
+            <details class="legal-dropdown">
+                <summary>Section 905 (Subdivisions)<span class="violation-tag" style="margin-left: auto; margin-right: 1rem;">VIOLATION</span></summary>
+                <div class="dropdown-content">
+                    <p><strong>Regulatory Requirement:</strong> Double frontage lots along arterials must be heavily buffered.</p>
+                    <p style="margin-bottom: 0;"><strong>Application to Chapel Crossings:</strong> Backyards facing SR 54 require continuous structural buffering, not standard privacy fencing.</p>
+                </div>
+            </details>
+
+            <details class="legal-dropdown">
+                <summary>Section 1003 (Fences/Walls)<span class="violation-tag" style="margin-left: auto; margin-right: 1rem;">VIOLATION</span></summary>
+                <div class="dropdown-content">
+                    <p><strong>Regulatory Requirement:</strong> Exceptions to 4-foot fence limits are granted for continuous buffer walls along arterials.</p>
+                    <p style="margin-bottom: 0;"><strong>Application to Chapel Crossings:</strong> Standard unreinforced fencing violates the intent of structural arterial buffering.</p>
+                </div>
+            </details>
+
+            <div class="grid-2-col" style="margin-top: 3rem;">
+                <div class="card" style="border-left: 4px solid var(--math-green);">
+                    <h3 style="color: var(--math-green); margin-top: 0;"><i class="fa-solid fa-calculator" style="margin-right: 8px;"></i> Structural Vulnerability & Kinetic Energy Analysis</h3>
                     <p>To objectively prove the inadequacy of the current perimeter fencing, we evaluate the physics of a VRD using standard kinetic energy modeling. The current unreinforced fencing installed by the developer is merely an aesthetic boundary.</p>
                     <p>We model the kinetic energy (KE) of a standard mid-size SUV (mass m = 1800 kg) departing the roadway at the posted or frequently traveled speeds along SR 54.</p>
                     <div class="math-block">
@@ -527,9 +558,9 @@
                     </div>
                 </div>
                 <div class="card">
-                    <h3>Conclusion of Structural Forces</h3>
-                    <p>A standard residential vinyl or wood privacy fence is instantly pulverized by localized forces exceeding 300,000 Joules, allowing the vehicle to carry its remaining kinetic energy directly into a residential dwelling or populated backyard.</p>
-                    <p>Only a continuous, steel-reinforced, precast concrete barrier can successfully dissipate this kinetic energy and safely redirect an out-of-control vehicle. <em>Note: A rigid safety barrier compliant with FDM 215 will subsequently provide massive acoustic noise reduction as a secondary physical byproduct.</em></p>
+                    <h3 style="margin-top: 0;"><i class="fa-solid fa-car-burst" style="color: var(--accent-blue); margin-right: 8px; transition: color var(--transition-speed);"></i> Conclusion of Structural Forces</h3>
+                    <p>A standard residential vinyl or wood privacy fence is instantly pulverized by localized forces exceeding <strong>300,000 Joules</strong>, allowing the vehicle to carry its remaining kinetic energy directly into a residential dwelling or populated backyard.</p>
+                    <p>Only a continuous, steel-reinforced, precast concrete barrier can successfully dissipate this kinetic energy and safely redirect an out-of-control vehicle. <br><br><em>Note: A rigid safety barrier compliant with FDM 215 will subsequently provide massive acoustic noise reduction as a secondary physical byproduct.</em></p>
                 </div>
             </div>
         </section>
@@ -538,10 +569,10 @@
             <h2>IV. Proposed Multi-Agency Action Plan</h2>
             <p>The residents of Chapel Crossings propose a bifurcated approach to immediately mitigate the safety threat while a permanent infrastructure solution is developed.</p>
 
-            <div class="grid-2-col">
-                <div class="card" style="border-top: 4px solid var(--info-blue);">
-                    <h3 style="color: var(--info-blue); margin-top: 0;">Phase 1: Immediate Traffic Calming & Data Acquisition</h3>
-                    <ul style="padding-left: 1.5rem;">
+            <div class="flow-diagram">
+                <div class="flow-step" style="border-top: 4px solid var(--accent-blue);">
+                    <h3 style="color: var(--accent-blue); margin-top: 0; transition: color var(--transition-speed);">Phase 1: Immediate Traffic Calming & Data Acquisition</h3>
+                    <ul style="padding-left: 1.5rem; color: var(--text-muted); line-height: 1.7; transition: color var(--transition-speed);">
                         <li style="margin-bottom: 0.75rem;">Deployment of permanent or semi-permanent radar speed trailers at the approach to the Chapel Crossings curve.</li>
                         <li style="margin-bottom: 0.75rem;">Deployment of a decoy sheriff’s vehicle at the intersection. I have reached out with the sheriff’s department and filed a complaint earlier this year for the noise of reckless driving in the area to no response.</li>
                         <li style="margin-bottom: 0.75rem;"><strong>Initiation of highly specific Florida Sunshine Law public records requests to acquire actionable data:</strong>
@@ -553,90 +584,151 @@
                         </li>
                     </ul>
                 </div>
-                <div class="card" style="border-top: 4px solid var(--math-green);">
-                    <h3 style="color: var(--math-green); margin-top: 0;">Phase 2: Permanent Infrastructure Remediation</h3>
+
+                <div class="flow-arrow">
+                    <i class="fa-solid fa-arrow-right-long"></i>
+                </div>
+
+                <div class="flow-step" style="border-top: 4px solid var(--math-green);">
+                    <h3 style="color: var(--math-green); margin-top: 0; transition: color var(--transition-speed);">Phase 2: Permanent Infrastructure Remediation</h3>
                     <p>Joint funding and engineering surveying for a structural roadway departure crash barrier.</p>
                     <p>We formally request that the Chapel Crossings POA/ Community Development District (CDD) collaborate with Pasco County to navigate the Land Development Code permitting process to replace the current lack of barrier with a load-bearing protective wall that addresses the latent safety defects inherent in the community's current design.</p>
                     
-                    <div class="media-container" style="margin-top: 1.5rem;">
-                        <img src="proposed_barrier_blueprint.png" alt="Geographic Aerial Blueprint of Barrier Placement">
-                        <span class="filename-label">File: proposed_barrier_blueprint.png</span>
+                    <div class="media-container" style="margin-top: 1.5rem; margin-bottom: 0;">
+                        <img src="proposed_barrier_blueprint.png" alt="Geographic Aerial Blueprint of Barrier Placement" onerror="this.src='data:image/svg+xml;charset=UTF-8,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%22100%25%22 height=%22150%22 background=%22%23e2e8f0%22%3E%3Ctext x=%2250%25%22 y=%2250%25%22 dominant-baseline=%22middle%22 text-anchor=%22middle%22 font-family=%22sans-serif%22 font-size=%2214px%22 fill=%22%2364748b%22%3EImage Placeholder%3C/text%3E%3C/svg%3E';">
                     </div>
                 </div>
             </div>
         </section>
 
-        <section id="contact" class="content-section" style="text-align: center; padding-top: 2rem; padding-bottom: 6rem; background-color: var(--card-bg);">
-            <h2 style="border-bottom: 2px solid var(--hazard-red); color: var(--hazard-red);">Immediate Action Required</h2>
-            <p style="font-size: 1.2rem; max-width: 800px; margin: 0 auto 2rem auto; color: var(--text-dark);">
+        <section id="contact" class="content-section" style="text-align: center; padding-top: 4rem; padding-bottom: 6rem; background-color: var(--card-bg); border-top: 1px solid var(--border-color); transition: background-color var(--transition-speed), border-color var(--transition-speed);">
+            <h2 class="serif-heading" style="border: none; color: var(--hazard-maroon); font-size: 2rem; margin-bottom: 1rem;"><i class="fa-solid fa-file-signature"></i> Immediate Action Required</h2>
+            <p style="font-size: 1.2rem; max-width: 800px; margin: 0 auto 2rem auto; color: var(--text-dark); font-weight: 500;">
                 A structural perimeter barrier is not an aesthetic request; it is a mathematical and legal necessity. Protect our community from an inevitable tragedy. Join the coalition and support the barrier proposal today.
             </p>
 
-            <div class="grid-2-col before-after-container" style="max-width: 1000px; margin: 0 auto 3rem auto;">
-                <div>
-                    <div class="before-after-header before-header">
-                        BEFORE: Current Hazard
+            <div class="grid-2-col" style="max-width: 900px; margin: 0 auto 3rem auto; text-align: left; gap: 1rem;">
+                <div style="border: 1px solid var(--border-color); border-radius: 6px; overflow: hidden; box-shadow: var(--shadow-sm); transition: border-color var(--transition-speed);">
+                    <div style="background-color: var(--hazard-maroon); color: white; padding: 0.75rem; text-align: center; font-weight: bold; letter-spacing: 1px; text-transform: uppercase; font-size: 0.9rem; transition: background-color var(--transition-speed);">
+                        <i class="fa-solid fa-xmark" style="margin-right: 8px;"></i> BEFORE: Current Hazard
                     </div>
-                    <div class="before-after-card media-container" style="margin-bottom: 0;">
-                        <img src="image.png" alt="Current Hazard state facing SR 54">
-                        <span class="filename-label">File: image.png</span>
+                    <div style="padding: 0.5rem; background: var(--primary-bg); transition: background-color var(--transition-speed);">
+                        <img src="image.png" alt="Current Hazard state facing SR 54" style="width: 100%; display: block; border-radius: 4px;" onerror="this.src='data:image/svg+xml;charset=UTF-8,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%22100%25%22 height=%22200%22 background=%22%23cbd5e1%22%3E%3Ctext x=%2250%25%22 y=%2250%25%22 dominant-baseline=%22middle%22 text-anchor=%22middle%22 font-family=%22sans-serif%22 font-size=%2214px%22 fill=%22%23475569%22%3EImage Placeholder%3C/text%3E%3C/svg%3E';">
                     </div>
                 </div>
-                <div>
-                    <div class="before-after-header after-header">
-                        AFTER: Proposed Protection
+                <div style="border: 1px solid var(--border-color); border-radius: 6px; overflow: hidden; box-shadow: var(--shadow-sm); transition: border-color var(--transition-speed);">
+                    <div style="background-color: var(--math-green); color: white; padding: 0.75rem; text-align: center; font-weight: bold; letter-spacing: 1px; text-transform: uppercase; font-size: 0.9rem; transition: background-color var(--transition-speed);">
+                        <i class="fa-solid fa-check" style="margin-right: 8px;"></i> AFTER: Proposed Protection
                     </div>
-                    <div class="before-after-card media-container" style="margin-bottom: 0;">
-                        <img src="image2.png" alt="Proposed Protective Structural Wall">
-                        <span class="filename-label">File: image2.png</span>
+                    <div style="padding: 0.5rem; background: var(--primary-bg); transition: background-color var(--transition-speed);">
+                        <img src="image2.png" alt="Proposed Protective Structural Wall" style="width: 100%; display: block; border-radius: 4px;" onerror="this.src='data:image/svg+xml;charset=UTF-8,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%22100%25%22 height=%22200%22 background=%22%23cbd5e1%22%3E%3Ctext x=%2250%25%22 y=%2250%25%22 dominant-baseline=%22middle%22 text-anchor=%22middle%22 font-family=%22sans-serif%22 font-size=%2214px%22 fill=%22%23475569%22%3EImage Placeholder%3C/text%3E%3C/svg%3E';">
                     </div>
                 </div>
             </div>
             
-            <a href="mailto:kduywork@gmail.com?cc=atay7701@gmail.com" class="btn-cta-red">
-                Acknowledge/Respond
+            <a href="mailto:kduywork@gmail.com?cc=atay7701@gmail.com" class="btn-cta-primary">
+                Acknowledge & Respond <i class="fa-solid fa-envelope" style="margin-left: 8px;"></i>
             </a>
 
-            <div class="contact-grid">
-                <div class="contact-card" style="border-top: 4px solid var(--info-blue);">
-                    <p style="margin-bottom: 0.25rem; font-size: 1.1rem;"><strong>Kevin Duy</strong></p>
+            <div class="grid-2-col" style="gap: 1.5rem; margin-top: 3rem; text-align: left; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));">
+                <div class="card" style="padding: 1.5rem; border-top: 4px solid var(--accent-blue);">
+                    <p style="margin-bottom: 0.25rem; font-size: 1.1rem; color: var(--text-dark);"><strong>Kevin Duy</strong></p>
                     <p style="margin-bottom: 1rem; color: var(--text-muted); font-style: italic; font-size: 0.9rem;">Resident & Data Scientist, US Special Operations</p>
-                    <p style="margin-bottom: 0.5rem; font-size: 0.95rem;">✉️ <a href="mailto:kduywork@gmail.com" style="color: var(--text-dark); font-weight: 500;">kduywork@gmail.com</a></p>
-                    <p style="margin-bottom: 0; font-size: 0.95rem;">📞 <a href="tel:7272255444" style="color: var(--text-dark); font-weight: 500;">(727) 225-5444</a></p>
+                    <p style="margin-bottom: 0.5rem; font-size: 0.95rem;"><i class="fa-solid fa-envelope" style="color: var(--text-muted); width: 20px; transition: color var(--transition-speed);"></i> <a href="mailto:kduywork@gmail.com">kduywork@gmail.com</a></p>
+                    <p style="margin-bottom: 0; font-size: 0.95rem;"><i class="fa-solid fa-phone" style="color: var(--text-muted); width: 20px; transition: color var(--transition-speed);"></i> <a href="tel:7272255444">(727) 225-5444</a></p>
                 </div>
 
-                <div class="contact-card" style="border-top: 4px solid var(--sidebar-bg);">
-                    <p style="margin-bottom: 0.25rem; font-size: 1.1rem;"><strong>Arwen Finn-Wells</strong></p>
+                <div class="card" style="padding: 1.5rem; border-top: 4px solid var(--border-color);">
+                    <p style="margin-bottom: 0.25rem; font-size: 1.1rem; color: var(--text-dark);"><strong>Arwen Finn-Wells</strong></p>
                     <p style="margin-bottom: 1rem; color: var(--text-muted); font-size: 0.9rem;">Resident, Pendleton Landing Circle</p>
-                    <p style="margin-bottom: 0; font-size: 0.95rem;">📞 <a href="tel:7273595178" style="color: var(--text-dark); font-weight: 500;">(727) 359-5178</a></p>
+                    <p style="margin-bottom: 0; font-size: 0.95rem;"><i class="fa-solid fa-phone" style="color: var(--text-muted); width: 20px; transition: color var(--transition-speed);"></i> <a href="tel:7273595178">(727) 359-5178</a></p>
                 </div>
 
-                <div class="contact-card" style="border-top: 4px solid var(--sidebar-bg);">
-                    <p style="margin-bottom: 0.25rem; font-size: 1.1rem;"><strong>Natalie Ross</strong></p>
+                <div class="card" style="padding: 1.5rem; border-top: 4px solid var(--border-color);">
+                    <p style="margin-bottom: 0.25rem; font-size: 1.1rem; color: var(--text-dark);"><strong>Natalie Ross</strong></p>
                     <p style="margin-bottom: 1rem; color: var(--text-muted); font-size: 0.9rem;">Resident, Pendleton Landing Circle</p>
-                    <p style="margin-bottom: 0; font-size: 0.95rem;">📞 <a href="tel:8134955694" style="color: var(--text-dark); font-weight: 500;">(813) 495-5694</a></p>
+                    <p style="margin-bottom: 0; font-size: 0.95rem;"><i class="fa-solid fa-phone" style="color: var(--text-muted); width: 20px; transition: color var(--transition-speed);"></i> <a href="tel:8134955694">(813) 495-5694</a></p>
                 </div>
             </div>
         </section>
-
     </main>
 
+    <button id="scrollTopBtn" onclick="scrollToTop()" aria-label="Scroll to top"><i class="fa-solid fa-chevron-up"></i></button>
+
     <script>
-        // Sidebar Toggle Functionality
+        // --- 1. SIDEBAR TOGGLE (Responsive) ---
         function toggleSidebar() {
-            const sidebar = document.getElementById('sidebar');
-            sidebar.classList.toggle('collapsed');
+            document.getElementById('sidebar').classList.toggle('collapsed');
         }
 
-        // Close sidebar on mobile when a link is clicked
-        const navLinks = document.querySelectorAll('.sidebar-nav a');
-        navLinks.forEach(link => {
+        // Auto-close sidebar when a link is clicked (useful on mobile or when toggled open)
+        document.querySelectorAll('.sidebar-nav a').forEach(link => {
             link.addEventListener('click', () => {
                 if (window.innerWidth <= 768) {
                     document.getElementById('sidebar').classList.add('collapsed');
                 }
             });
         });
+
+        // --- 2. DARK MODE TOGGLE & CACHING (Strict Light Mode Default) ---
+        const themeIcon = document.querySelector('#themeIcon i');
+        
+        // Force default strictly to 'light' regardless of prior untracked cache
+        let currentTheme = localStorage.getItem('theme');
+        if (!currentTheme || currentTheme !== 'dark') {
+            currentTheme = 'light';
+            localStorage.setItem('theme', 'light');
+        }
+        
+        document.documentElement.setAttribute('data-theme', currentTheme);
+        updateThemeIcon(currentTheme);
+
+        function toggleTheme() {
+            let targetTheme = 'light';
+            if (document.documentElement.getAttribute('data-theme') === 'light') {
+                targetTheme = 'dark';
+            }
+            document.documentElement.setAttribute('data-theme', targetTheme);
+            localStorage.setItem('theme', targetTheme); // Cache choice
+            updateThemeIcon(targetTheme);
+        }
+
+        function updateThemeIcon(theme) {
+            if (theme === 'dark') {
+                themeIcon.classList.remove('fa-moon');
+                themeIcon.classList.add('fa-sun');
+            } else {
+                themeIcon.classList.remove('fa-sun');
+                themeIcon.classList.add('fa-moon');
+            }
+        }
+
+        // --- 3. SCROLL PROGRESS & SCROLL TO TOP (Passive Event Listeners) ---
+        const mainScrollArea = document.getElementById('main-scroll-area');
+        const progressBar = document.getElementById('scroll-progress');
+        const scrollTopBtn = document.getElementById('scrollTopBtn');
+
+        mainScrollArea.addEventListener('scroll', () => {
+            // Scroll Progress Calculation
+            const scrollTop = mainScrollArea.scrollTop;
+            const scrollHeight = mainScrollArea.scrollHeight - mainScrollArea.clientHeight;
+            const scrollPercentage = (scrollTop / scrollHeight) * 100;
+            progressBar.style.width = scrollPercentage + '%';
+
+            // Scroll to Top Button Visibility
+            if (scrollTop > 300) {
+                scrollTopBtn.classList.add('visible');
+            } else {
+                scrollTopBtn.classList.remove('visible');
+            }
+        }, { passive: true });
+
+        function scrollToTop() {
+            mainScrollArea.scrollTo({
+                top: 0,
+                behavior: 'smooth'
+            });
+        }
     </script>
 </body>
 </html>

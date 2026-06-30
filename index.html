@@ -236,6 +236,53 @@
             transition: background-color var(--transition-speed), border-color var(--transition-speed);
         }
 
+        /* --- IMAGE SLIDER --- */
+        .image-slider {
+            display: flex;
+            overflow-x: auto;
+            scroll-snap-type: x mandatory;
+            gap: 1.5rem;
+            padding-bottom: 1rem;
+            -webkit-overflow-scrolling: touch;
+            margin-top: 2rem;
+        }
+        .image-slider::-webkit-scrollbar {
+            height: 8px;
+        }
+        .image-slider::-webkit-scrollbar-track {
+            background: var(--primary-bg); 
+            border-radius: 4px;
+        }
+        .image-slider::-webkit-scrollbar-thumb {
+            background: var(--border-color); 
+            border-radius: 4px;
+        }
+        .image-slider::-webkit-scrollbar-thumb:hover {
+            background: var(--text-muted); 
+        }
+        .slider-item {
+            flex: 0 0 85%;
+            scroll-snap-align: center;
+            border-radius: 6px;
+            overflow: hidden;
+            border: 1px solid var(--border-color);
+            background: var(--primary-bg);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: border-color var(--transition-speed), background-color var(--transition-speed);
+        }
+        @media (min-width: 768px) {
+            .slider-item {
+                flex: 0 0 48%; /* Shows roughly two images on desktop */
+            }
+        }
+        .slider-item img {
+            width: 100%;
+            height: auto;
+            display: block;
+        }
+
         /* --- DROPDOWNS (ACCORDIONS) --- */
         details.legal-dropdown {
             background: var(--card-bg);
@@ -466,14 +513,27 @@
 
             <div class="card" style="margin-bottom: 2rem;">
                 <h3><i class="fa-solid fa-users" style="color: var(--accent-blue); margin-right: 8px; transition: color var(--transition-speed);"></i> Community’s Calling</h3>
-                <p>Recent discourse within the Wesley Chapel Community Facebook group reveals a mounting consensus among local residents regarding a significant increase in reckless and aggressive driving in the area. Many community members have taken to the platform to document their daily frustrations, noting that these behaviors are putting both new and experienced drivers at risk. The overarching sentiment is one of bewilderment at the declining quality of road safety, with one resident expressing, "I'm lost have people forgotten how to drive? I've never seen so much bad driving as I have the last 2 days." Another member bluntly asserted that "people need to go back to driving school," observing that many motorists "drive to reckless and clearly don't understand the laws of the roads."</p>
-                <p>Specific anecdotes shared within the group highlight highly dangerous, impatient maneuvers that routinely endanger the public. For example, one resident recounted a startling incident where their vehicle was safely and legally entering a left-turn lane, only to have the driver behind them "go around us on a single-lane road, driving over the yellow lines just to beat us into the turn lane." Other locals have pointed out the illogical nature of this pervasive impatience. One commuter questioned why motorists are constantly "in a hurry to get to the red light," noting that people frequently "rush around get in front of someone to slam on the brakes," a practice that "makes absolutely no sense" and disrupts the flow of traffic for everyone.</p>
-                <p>Furthermore, community members who drive frequently for work have observed a general "lack of awareness" on local routes, with specific hazardous incidents being reported on major thoroughfares like Wesley Chapel Boulevard near the Stagecoach neighborhood, as well as in close proximity to local schools like Cypress Creek Middle School. Ultimately, these firsthand accounts aggregated from the Wesley Chapel Community page paint a clear picture of a neighborhood increasingly alarmed by hazardous road conditions and collectively calling for an immediate return to basic traffic safety and mutual respect on the roads.</p>
+                <p>Recent discourse within the Chapel Crossings residential community reveals a highly localized and mounting outrage regarding the dangerous alignment of the newly constructed SR-54 and Zephyrhills Bypass intersection. Residents are openly documenting a chronic history of severe accidents stemming from what they describe as a "horrible design" and a "ridiculous 90-degree turn" forced around a protected pond. Community members note that "accidents happen all the time on this intersection," citing terrifying precedents including a vehicle that previously drove directly into a house, a recent crash where a car was submerged in the adjacent pond, and constant, high-speed street racing occurring outside neighborhood boundaries throughout the night.</p>
+                <p>Beyond the immediate physical danger, there is a profound and growing disillusionment with the community's developers. Residents are publicly expressing that the developer is "not as upscale" as initial marketing led them to believe. They point out the glaring inequity that this section of the neighborhood has been left "fully exposed" to a high-speed arterial, noting that "much older, lower-scale communities have walls." The current mitigation efforts have been dismissed by homeowners as a "joke," with widespread agreement that the developer failed in their duty of care; as one resident bluntly stated, "There should have been a wall done by the developer. I don't think those houses should have ever been built there, but too late now."</p>
+                <p>This foreseeable negligence has prompted unified calls for immediate bureaucratic intervention. Recognizing the "extremely concerning and dangerous" reality of their exposed backyards, residents are actively pushing for petitions to the county to address the road design, while simultaneously demanding that the CDD and builders construct a load-bearing retaining wall. The overarching sentiment is one of grim vindication—characterized by statements like "I knew that was going to happen" and "I was wondering when that was going to happen"—proving that the hazards of this intersection are not freak accidents, but glaring, unmitigated structural failures that the community has recognized long before the developers or the county have chosen to act.</p>
 
-                <div class="media-container" style="max-width: 500px; margin: 1.5rem auto 0 auto;">
-                    <img src="post.png" alt="Facebook post from a resident showing a vehicle that ran off the road near backyards" onerror="this.src='data:image/svg+xml;charset=UTF-8,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%22100%25%22 height=%22200%22 background=%22%23e2e8f0%22%3E%3Ctext x=%2250%25%22 y=%2250%25%22 dominant-baseline=%22middle%22 text-anchor=%22middle%22 font-family=%22sans-serif%22 font-size=%2214px%22 fill=%22%2364748b%22%3EImage Placeholder%3C/text%3E%3C/svg%3E';">
-                    <p style="padding: 1rem; font-size: 0.9rem; margin-bottom: 0; text-align: left; background: var(--primary-bg); border-top: 1px solid var(--border-color); transition: background-color var(--transition-speed), border-color var(--transition-speed);"><strong>Description:</strong> A December 2025 post from the Chapel Crossings Residents Facebook group documenting a vehicle that failed to negotiate the turn, stopping dangerously close to residential backyards and explicitly highlighting the community's frustration over the lack of a protective wall.</p>
+                <div class="image-slider">
+                    <div class="slider-item">
+                        <img src="post1.jpg" alt="Resident Testimony Post Evidence 1" onerror="this.src='data:image/svg+xml;charset=UTF-8,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%22100%25%22 height=%22300%22 background=%22%23e2e8f0%22%3E%3Ctext x=%2250%25%22 y=%2250%25%22 dominant-baseline=%22middle%22 text-anchor=%22middle%22 font-family=%22sans-serif%22 font-size=%2214px%22 fill=%22%2364748b%22%3Epost1.jpg%3C/text%3E%3C/svg%3E';">
+                    </div>
+                    <div class="slider-item">
+                        <img src="post2.jpg" alt="Resident Testimony Post Evidence 2" onerror="this.src='data:image/svg+xml;charset=UTF-8,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%22100%25%22 height=%22300%22 background=%22%23e2e8f0%22%3E%3Ctext x=%2250%25%22 y=%2250%25%22 dominant-baseline=%22middle%22 text-anchor=%22middle%22 font-family=%22sans-serif%22 font-size=%2214px%22 fill=%22%2364748b%22%3Epost2.jpg%3C/text%3E%3C/svg%3E';">
+                    </div>
+                    <div class="slider-item">
+                        <img src="post3.jpg" alt="Resident Testimony Post Evidence 3" onerror="this.src='data:image/svg+xml;charset=UTF-8,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%22100%25%22 height=%22300%22 background=%22%23e2e8f0%22%3E%3Ctext x=%2250%25%22 y=%2250%25%22 dominant-baseline=%22middle%22 text-anchor=%22middle%22 font-family=%22sans-serif%22 font-size=%2214px%22 fill=%22%2364748b%22%3Epost3.jpg%3C/text%3E%3C/svg%3E';">
+                    </div>
+                    <div class="slider-item">
+                        <img src="post4.jpg" alt="Resident Testimony Post Evidence 4" onerror="this.src='data:image/svg+xml;charset=UTF-8,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%22100%25%22 height=%22300%22 background=%22%23e2e8f0%22%3E%3Ctext x=%2250%25%22 y=%2250%25%22 dominant-baseline=%22middle%22 text-anchor=%22middle%22 font-family=%22sans-serif%22 font-size=%2214px%22 fill=%22%2364748b%22%3Epost4.jpg%3C/text%3E%3C/svg%3E';">
+                    </div>
                 </div>
+                <p style="margin-top: 1rem; font-size: 0.9rem; margin-bottom: 0; text-align: center; color: var(--text-muted); font-style: italic;">
+                    <strong>Figure 2.1:</strong> Aggregated community documentation from the Chapel Crossings Residents group outlining recent severe horizontal alignment departures, hazardous conditions, and unified concern over the clear zone exposure. Scroll sideways to view all posts.
+                </p>
             </div>
 
             <div class="grid-2-col">

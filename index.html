@@ -420,6 +420,63 @@
         #scrollTopBtn.visible { opacity: 1; visibility: visible; }
         #scrollTopBtn:hover { transform: scale(1.1); background-color: var(--sidebar-hover); }
 
+        /* --- IMAGE LIGHTBOX MODAL --- */
+        .image-modal {
+            display: none; 
+            position: fixed; 
+            z-index: 99999; 
+            padding-top: 60px; 
+            left: 0;
+            top: 0;
+            width: 100%; 
+            height: 100%; 
+            overflow: auto; 
+            background-color: rgba(0,0,0,0.9); 
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+        .image-modal.show {
+            display: block;
+            opacity: 1;
+        }
+        .modal-content {
+            margin: auto;
+            display: block;
+            max-width: 90%;
+            max-height: 85vh;
+            border-radius: 4px;
+            box-shadow: 0 4px 25px rgba(0,0,0,0.5);
+            animation-name: zoomModal;
+            animation-duration: 0.3s;
+        }
+        @keyframes zoomModal {
+            from {transform:scale(0.95); opacity: 0;} 
+            to {transform:scale(1); opacity: 1;}
+        }
+        .close-modal {
+            position: absolute;
+            top: 15px;
+            right: 35px;
+            color: #f1f1f1;
+            font-size: 40px;
+            font-weight: bold;
+            transition: 0.2s;
+            cursor: pointer;
+            z-index: 100000;
+        }
+        .close-modal:hover,
+        .close-modal:focus {
+            color: #bbb;
+            text-decoration: none;
+        }
+        .clickable-img {
+            cursor: zoom-in;
+            transition: opacity 0.2s ease, transform 0.2s ease;
+        }
+        .clickable-img:hover {
+            opacity: 0.85;
+        }
+
         /* --- RESPONSIVE DESIGN --- */
         @media (max-width: 992px) {
             .grid-2-col, .flow-diagram { grid-template-columns: 1fr; flex-direction: column; }
@@ -431,6 +488,7 @@
             .content-section { padding: 2rem 1.5rem; }
             .landing-card { padding: 2rem 1.5rem; }
             h1 { font-size: 1.75rem; }
+            .close-modal { top: 10px; right: 20px; }
         }
     </style>
 </head>
@@ -532,7 +590,7 @@
                     </div>
                 </div>
                 <p style="margin-top: 1rem; font-size: 0.9rem; margin-bottom: 0; text-align: center; color: var(--text-muted); font-style: italic;">
-                    <strong>Figure 2.1:</strong> Aggregated community documentation from the Chapel Crossings Residents group outlining recent severe horizontal alignment departures, hazardous conditions, and unified concern over the clear zone exposure. Scroll sideways to view all posts.
+                    <strong>Figure 2.1:</strong> Aggregated community documentation from the Chapel Crossings Residents group outlining recent severe horizontal alignment departures, hazardous conditions, and unified concern over the clear zone exposure. Scroll sideways to view all posts. <strong>(Click images to enlarge)</strong>
                 </p>
             </div>
 
@@ -715,13 +773,18 @@
 
     <button id="scrollTopBtn" onclick="scrollToTop()" aria-label="Scroll to top"><i class="fa-solid fa-chevron-up"></i></button>
 
+    <div id="imageModal" class="image-modal">
+        <span class="close-modal">&times;</span>
+        <img class="modal-content" id="enlargedImg">
+    </div>
+
     <script>
         // --- 1. SIDEBAR TOGGLE (Responsive) ---
         function toggleSidebar() {
             document.getElementById('sidebar').classList.toggle('collapsed');
         }
 
-        // Auto-close sidebar when a link is clicked (useful on mobile or when toggled open)
+        // Auto-close sidebar when a link is clicked
         document.querySelectorAll('.sidebar-nav a').forEach(link => {
             link.addEventListener('click', () => {
                 if (window.innerWidth <= 768) {
@@ -730,26 +793,18 @@
             });
         });
 
-        // --- 2. DARK MODE TOGGLE & CACHING (Strict Light Mode Default) ---
+        // --- 2. DARK MODE TOGGLE (Strictly Forced Light on Load) ---
         const themeIcon = document.querySelector('#themeIcon i');
         
-        // Force default strictly to 'light' regardless of prior untracked cache
-        let currentTheme = localStorage.getItem('theme');
-        if (!currentTheme || currentTheme !== 'dark') {
-            currentTheme = 'light';
-            localStorage.setItem('theme', 'light');
-        }
-        
-        document.documentElement.setAttribute('data-theme', currentTheme);
-        updateThemeIcon(currentTheme);
+        // Always force light mode on initial load
+        document.documentElement.setAttribute('data-theme', 'light');
+        updateThemeIcon('light');
 
         function toggleTheme() {
-            let targetTheme = 'light';
-            if (document.documentElement.getAttribute('data-theme') === 'light') {
-                targetTheme = 'dark';
-            }
+            let currentTheme = document.documentElement.getAttribute('data-theme');
+            let targetTheme = currentTheme === 'light' ? 'dark' : 'light';
+            
             document.documentElement.setAttribute('data-theme', targetTheme);
-            localStorage.setItem('theme', targetTheme); // Cache choice
             updateThemeIcon(targetTheme);
         }
 
@@ -763,19 +818,17 @@
             }
         }
 
-        // --- 3. SCROLL PROGRESS & SCROLL TO TOP (Passive Event Listeners) ---
+        // --- 3. SCROLL PROGRESS & SCROLL TO TOP ---
         const mainScrollArea = document.getElementById('main-scroll-area');
         const progressBar = document.getElementById('scroll-progress');
         const scrollTopBtn = document.getElementById('scrollTopBtn');
 
         mainScrollArea.addEventListener('scroll', () => {
-            // Scroll Progress Calculation
             const scrollTop = mainScrollArea.scrollTop;
             const scrollHeight = mainScrollArea.scrollHeight - mainScrollArea.clientHeight;
             const scrollPercentage = (scrollTop / scrollHeight) * 100;
             progressBar.style.width = scrollPercentage + '%';
 
-            // Scroll to Top Button Visibility
             if (scrollTop > 300) {
                 scrollTopBtn.classList.add('visible');
             } else {
@@ -789,6 +842,35 @@
                 behavior: 'smooth'
             });
         }
+
+        // --- 4. IMAGE LIGHTBOX (MODAL) ---
+        const modal = document.getElementById("imageModal");
+        const modalImg = document.getElementById("enlargedImg");
+        const closeModalBtn = document.querySelector(".close-modal");
+
+        // Add clickable class to all images
+        document.querySelectorAll('img').forEach(img => {
+            img.classList.add('clickable-img');
+            img.addEventListener('click', function() {
+                modal.style.display = "block";
+                setTimeout(() => modal.classList.add('show'), 10);
+                modalImg.src = this.src;
+            });
+        });
+
+        // Close logic
+        function closeImageModal() {
+            modal.classList.remove('show');
+            setTimeout(() => modal.style.display = "none", 300);
+        }
+
+        closeModalBtn.addEventListener('click', closeImageModal);
+        
+        modal.addEventListener('click', function(event) {
+            if (event.target === modal) {
+                closeImageModal();
+            }
+        });
     </script>
 </body>
 </html>
